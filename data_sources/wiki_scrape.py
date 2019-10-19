@@ -267,9 +267,26 @@ df['filtered_para']=df.apply(lambda row:(match_parastart(lower_all(row['para_blo
     
 #para_blocks.apply(lambda p: [keeper if para_startswith(keeper,['Metabolism']) else 'NM' for keeper in p])
 df['filtered_para'].value_counts().head()
+df['herb_name']=df.index.values
+df['indexed_para']=df.apply(lambda row: ['**'+row['herb_name']+'**'+ para for para in row['filtered_para']],axis=1)
 
+df_trimmed=df[df['filtered_para'].apply(lambda p_list:'NO_MATCH' not in p_list)]
 
-paragraphs=df['filtered_para'].sum()
+paragraphs=df_trimmed['indexed_para'].sum()
+
+para_dict={}
+
+for para in paragraphs:
+    para_dict[para]=para.split('.')
+para_dict[list(para_dict.keys())[0]]
+df_block=pd.DataFrame.from_dict(para_dict,orient='index').transpose()
+df_block=pd.DataFrame.from_dict(para_dict,orient='index')
+df_block=df_block.fillna('NO_SENTENCE')
+
+df_block2=df_block.reset_index()
+melted_df=pd.melt(df_block2,id_vars='index')
+melted_df=melted_df.sort_values(by='index')
+melted_df.to_excel('block_text.xlsx')
 
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
