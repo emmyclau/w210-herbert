@@ -59,8 +59,8 @@ def get_links(wiki_page,filter_pattern=False):
 
 def wiki_compile(search_terms,filter_pattern=False,nan_pattern='NAN',filename='file.txt'):
     herb_dict=defaultdict(lambda:'not_captured')
-    if fielname:
-        file=open(filename,"w")
+    if filename:
+        file=open(filename,"a")
     for s in search_terms:
           valid_wiki=True
           #if search term is NAN then just pass
@@ -71,11 +71,20 @@ def wiki_compile(search_terms,filter_pattern=False,nan_pattern='NAN',filename='f
                   wikipage=wikipedia.page(s)
               except wikipedia.DisambiguationError as e:
                   known_page=e.options[0]
-                  wikipage=wikipedia.WikipediaPage(known_page)
-              except wikipedia.PageError as p:
+                  try:
+                      wikipage=wikipedia.WikipediaPage(known_page)
+                  except wikipedia.PageError:
+                      valid_wiki=False
+              except wikipedia.PageError:
                   search_result=wikipedia.search(s)
                   if search_result:
-                      wikipage=wikipedia.page(search_result[0])
+                      try:
+                          wikipage=wikipedia.page(search_result[0])
+                      except wikipedia.DisambiguationError as e:
+                          known_page=e.options[0]
+                          wikipage=wikipedia.WikipediaPage(known_page)
+                      except wikipedia.PageError:
+                          valid_wiki=False
                   else:
                       valid_wiki=False
           if valid_wiki:
@@ -88,8 +97,14 @@ def wiki_compile(search_terms,filter_pattern=False,nan_pattern='NAN',filename='f
               info_captured['content']=wikipage.content
               info_captured['related_pages']=wikipedia.search(s)
               info_captured['page_url']=wikipage.url
-              print('captured ',s)                 
-             herb_dict[s]=info_captured
+              print('captured ',s) 
+              herb_dict[s]=info_captured
+              if filename:
+                  for key in info_captured.keys():
+                      file.write(str(key)+':'+str(info_captured[key])+'|')
+                  file.write('\n')
+    if filename:
+        file.close()              
     return herb_dict
 
 res = requests.get("https://en.wikipedia.org/wiki/Category:Plants_used_in_traditional_Chinese_medicine")
