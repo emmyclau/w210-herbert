@@ -213,6 +213,7 @@ herb_TCMID['Latin Name']=herb_TCMID['Latin Name'].fillna('NAN')
 
 english_names=list(herb_TCMID['English Name'].unique())
 latin_names=list(herb_TCMID['Latin Name'].unique())
+super_duper=list(set(superset).union(set(english_names)).union(set(latin_names)))
 
 english_dict=wiki_compile(english_names,filename='english_namefile.txt')
 latin_dict=wiki_compile(latin_names)
@@ -345,23 +346,37 @@ ginseng=wiki_search('ginseng')
 desired_words=['name','synonym','taxonomy','genus','species','common name','other name','also called']
 
 def grab_wiki_sections(wikipage,desired_words,identifier=None):
-    table_of_contents=get_toc(wikipage.html())
-    toc_list=match_subset(lower_all(table_of_contents),desired_words)
     section_dict=defaultdict(lambda:'not_captured')
-    if not(identifier):
-        identifier=wikipage.title
-    for topic in toc_list:
-           if wikipage.section(topic.capitalize()):
-               topic_text=wikipage.section(topic.capitalize())
-           elif wikipage.section(topic.title()):
-               topic_text=wikipage.section(topic.title())
-           else:
-               topic_text=False
-           if topic_text:
-               section_dict[(identifier,topic)]={topic:topic_text}
+    if wikipage:
+        table_of_contents=get_toc(wikipage.html())
+        toc_list=match_subset(lower_all(table_of_contents),desired_words)
+        if not(identifier):
+            identifier=wikipage.title
+        for topic in toc_list:
+               if wikipage.section(topic.capitalize()):
+                   topic_text=wikipage.section(topic.capitalize())
+               elif wikipage.section(topic.title()):
+                   topic_text=wikipage.section(topic.title())
+               else:
+                   topic_text=False
+               if topic_text:
+                   section_dict[(identifier,topic)]={topic:topic_text}
     return section_dict
+    
 
-grab_wiki_sections(ginseng,desired_words)               
+grab_wiki_sections(ginseng,desired_words)   
+
+names=[]
+sections=[]
+for name in superset:
+    wikipage=wiki_search(name)
+    names.append(grab_wiki_sections(wikipage,desired_words))
+for wikipage in names:
+    if wikipage:
+      sections.append(grab_wiki_sections(wikipage,desired_words))          
+
+has_something=[section if bool(section) else "NA" for section in sections]
+
 
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
