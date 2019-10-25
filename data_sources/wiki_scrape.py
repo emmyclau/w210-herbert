@@ -377,7 +377,13 @@ for wikipage in names:
 
 has_something=[section if bool(section) else "NA" for section in sections]
 
+full_dict=defaultdict(set)
+for d in sections:
+    for k, v in d.items():  
+        full_dict[k]=v
+        
 
+        
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
 
