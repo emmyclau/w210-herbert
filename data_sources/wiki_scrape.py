@@ -214,7 +214,7 @@ herb_TCMID['Latin Name']=herb_TCMID['Latin Name'].fillna('NAN')
 english_names=list(herb_TCMID['English Name'].unique())
 latin_names=list(herb_TCMID['Latin Name'].unique())
 
-english_dict=wiki_compile(english_names)
+english_dict=wiki_compile(english_names,filename='english_namefile.txt')
 latin_dict=wiki_compile(latin_names)
 
 
@@ -245,7 +245,13 @@ def match_subset(array_words,array_substr):
     matched=[]
     for substr in array_substr:
         match_bool=np.asarray(list(map(lambda word: substr_found(word,substr),array_words)))
-        matched.extend(list(array_words[np.where(match_bool)[0]]))
+        try:
+            matched.extend(list(array_words[np.where(match_bool)[0]]))
+        except TypeError:
+            try:
+                matched.extend(list(array_words[np.where(match_bool)[0][0]]))
+            except IndexError:
+                 pass
     if matched:
         return matched
     else:
@@ -302,6 +308,60 @@ df_block2=df_block.reset_index()
 melted_df=pd.melt(df_block2,id_vars='index')
 melted_df=melted_df.sort_values(by='index')
 melted_df.to_excel('block_text.xlsx')
+
+
+
+###herb names#####
+def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN'):
+          valid_wiki=True
+          #if search term is NAN then just pass
+          if (nan_pattern) and (search_term==nan_pattern):
+                  valid_wiki=False 
+          else:
+              try:
+                  wikipage=wikipedia.page(search_term)
+              except wikipedia.DisambiguationError as e:
+                  known_page=e.options[0]
+                  try:
+                      wikipage=wikipedia.WikipediaPage(known_page)
+                  except wikipedia.PageError:
+                      valid_wiki=False
+              except wikipedia.PageError:
+                  search_result=wikipedia.search(search_term)
+                  if search_result:
+                      try:
+                          wikipage=wikipedia.page(search_result[0])
+                      except wikipedia.DisambiguationError as e:
+                          known_page=e.options[0]
+                          wikipage=wikipedia.WikipediaPage(known_page)
+                      except wikipedia.PageError:
+                          valid_wiki=False
+                  else:
+                      valid_wiki=False
+          if valid_wiki:
+                  return wikipage
+ginseng=wiki_search('ginseng')
+
+desired_words=['name','synonym','taxonomy','genus','species','common name','other name','also called']
+
+def grab_wiki_sections(wikipage,desired_words,identifier=None):
+    table_of_contents=get_toc(wikipage.html())
+    toc_list=match_subset(lower_all(table_of_contents),desired_words)
+    section_dict=defaultdict(lambda:'not_captured')
+    if not(identifier):
+        identifier=wikipage.title
+    for topic in toc_list:
+           if wikipage.section(topic.capitalize()):
+               topic_text=wikipage.section(topic.capitalize())
+           elif wikipage.section(topic.title()):
+               topic_text=wikipage.section(topic.title())
+           else:
+               topic_text=False
+           if topic_text:
+               section_dict[(identifier,topic)]={topic:topic_text}
+    return section_dict
+
+grab_wiki_sections(ginseng,desired_words)               
 
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
