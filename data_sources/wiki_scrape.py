@@ -382,7 +382,7 @@ for d in sections:
     for k, v in d.items():  
         full_dict[k]=v
         
-
+names_df=pd.DataFrame.from_dict(full_dict)
         
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
