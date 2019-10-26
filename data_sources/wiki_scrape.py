@@ -107,6 +107,19 @@ def wiki_compile(search_terms,filter_pattern=False,nan_pattern='NAN',filename='f
         file.close()              
     return herb_dict
 
+res = requests.get('https://en.wikibooks.org/wiki/Traditional_Chinese_Medicine/Usage_Of_Single_Herbs')
+soup = bs(res.text, "html.parser")
+table=soup.find('table')
+ths = table.find_all('th')
+headings = [th.text.strip() for th in ths]
+with open('traditional_chinese_wikitable.txt', 'w') as fo:
+    print('| '.join(headings), file=fo)
+    for tr in table.find_all('tr'):
+        tds = tr.find_all('td')
+        if not tds:
+            continue
+        print('| '.join([td.text.strip() for td in tds]), file=fo)
+
 res = requests.get("https://en.wikipedia.org/wiki/Category:Plants_used_in_traditional_Chinese_medicine")
 soup = bs(res.text, "html.parser")
 plants = {}
@@ -213,7 +226,9 @@ herb_TCMID['Latin Name']=herb_TCMID['Latin Name'].fillna('NAN')
 
 english_names=list(herb_TCMID['English Name'].unique())
 latin_names=list(herb_TCMID['Latin Name'].unique())
-super_duper=list(set(superset).union(set(english_names)).union(set(latin_names)))
+sym_lat=sym_herb['Latin_name'].fillna('NAN').unique()
+sym_eng=sym_herb['English_name'].fillna('NAN').unique()
+super_duper=list(set(superset).union(set(english_names)).union(set(latin_names)).union(set(sym_lat)).union(set(sym_eng)))
 
 english_dict=wiki_compile(english_names,filename='english_namefile.txt')
 latin_dict=wiki_compile(latin_names)
@@ -360,29 +375,37 @@ def grab_wiki_sections(wikipage,desired_words,identifier=None):
                else:
                    topic_text=False
                if topic_text:
-                   section_dict[(identifier,topic)]={topic:topic_text}
+                   section_dict[(identifier,topic)]={topic:topic_text,'toc':table_of_contents}
+               elif (not topic_text) and (table_of_contents):
+                   section_dict[(identifier,"no topic")]={topic:"no topic",'toc':table_of_contents}
+               else:
+                   continue
     return section_dict
     
 
 grab_wiki_sections(ginseng,desired_words)   
 
 names=[]
-sections=[]
-for name in superset:
+for name in super_duper:
     wikipage=wiki_search(name)
     names.append(grab_wiki_sections(wikipage,desired_words))
+    print(name)
+
+sections=[]
 for wikipage in names:
     if wikipage:
       sections.append(grab_wiki_sections(wikipage,desired_words))          
 
-has_something=[section if bool(section) else "NA" for section in sections]
+has_something=[section if bool(section) else "NA" for section in names]
 
 full_dict=defaultdict(set)
-for d in sections:
+for d in names:
     for k, v in d.items():  
         full_dict[k]=v
         
-names_df=pd.DataFrame.from_dict(full_dict)
+names_df=pd.DataFrame.from_dict(full_dict).transpose()
+
+names_df.to_csv('superset_names.csv')
         
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
