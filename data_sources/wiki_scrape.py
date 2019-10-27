@@ -385,10 +385,34 @@ def grab_wiki_sections(wikipage,desired_words,identifier=None):
 
 grab_wiki_sections(ginseng,desired_words)   
 
+###clean up list##
+super_string='|'.join(super_duper)
+super_string=super_string.replace('*','')
+super_string=super_string.replace('Equivalent plant:','|')
+super_string=super_string.replace('[Syn.','|')
+super_string=super_string.replace(']','')
+super_string=super_string.replace(',','|')
+super_string=super_string.replace('(',' ')
+super_string=super_string.replace(')',' ')
+super_string=super_string.replace(';','|')
+super_string=super_string.replace('.','')
+super_string=super_string.replace(':','')
+super_string=super_string.strip()
+super_string=re.sub(' +', ' ',super_string)
+super_cleaned=super_string.split('|')
+
+with open('listnames.txt', 'w') as filehandle:
+    for listitem in super_cleaned:
+        filehandle.write('%s\n' % listitem)
+i=0
 names=[]
-for name in super_duper:
-    wikipage=wiki_search(name)
-    names.append(grab_wiki_sections(wikipage,desired_words))
+for name in super_cleaned:
+    try:
+        wikipage=wiki_search(name)
+        names.append(grab_wiki_sections(wikipage,desired_words))
+    except wikipedia.DisambiguationError:
+        pass
+    i+=1
     print(name)
 
 sections=[]
@@ -405,7 +429,7 @@ for d in names:
         
 names_df=pd.DataFrame.from_dict(full_dict).transpose()
 
-names_df.to_csv('superset_names.csv')
+names_df.to_csv('wiki_scraped_names.csv')
         
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")
