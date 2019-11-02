@@ -5,9 +5,9 @@ Created on Wed Oct  2 13:43:34 2019
 
 @author: gurdit.chahal
 """
-exec(open('medline_scrape.py').read())
+#exec(open('medline_scrape.py').read())
 
-meds=list(drug_dict.keys())[6:181]
+#meds=list(drug_dict.keys())[6:181]
 
 import wikipedia
 import urllib.request
@@ -107,7 +107,7 @@ def wiki_compile(search_terms,filter_pattern=False,nan_pattern='NAN',filename='f
         file.close()              
     return herb_dict
 
-res = requests.get('https://en.wikibooks.org/wiki/Traditional_Chinese_Medicine/Usage_Of_Single_Herbs')
+'''res = requests.get('https://en.wikibooks.org/wiki/Traditional_Chinese_Medicine/Usage_Of_Single_Herbs')
 soup = bs(res.text, "html.parser")
 table=soup.find('table')
 ths = table.find_all('th')
@@ -249,7 +249,7 @@ with open('content_filtered.txt','r') as filehandle:
 
 filtered_content=[str.lower(herb.strip('\n')) for herb in filtered_content]
 
-top_words=np.asarray(['adverse','interact','warn','effect','side effect','react','toxi','regula','death','pois','allerg','risk','overdose','safe'])
+top_words=np.asarray(['adverse','interact','warn','effect','side effect','react','toxi','regula','death','pois','allerg','risk','overdose','safe'])'''
 
 def substr_found(full_string,substring):
     if full_string.find(substring)!=-1:
@@ -279,14 +279,14 @@ def lower_all(array):
     else:
         return np.asarray(array)
 
-df['filtered_toc']=df['table_of_contents'].apply(lambda toc_list:(match_subset(lower_all(toc_list),top_words))) 
+'''df['filtered_toc']=df['table_of_contents'].apply(lambda toc_list:(match_subset(lower_all(toc_list),top_words))) 
 
 df['filtered_toc'].value_counts().head()
 
        
 df['para_blocks']=df.content.apply(lambda page: page.replace('\n\n\n== ','<p>').split('<p>'))
         
-para_blocks=df.content.apply(lambda page: page.replace('\n\n\n== ','<p>').split('<p>'))
+para_blocks=df.content.apply(lambda page: page.replace('\n\n\n== ','<p>').split('<p>'))'''
 
 def para_startswith(para,start_list):
     return any([para.startswith(start) for start in start_list])
@@ -300,7 +300,7 @@ def match_parastart(array_para,array_starts):
     else:
         return ['NO_MATCH']
     
-df['filtered_para']=df.apply(lambda row:(match_parastart(lower_all(row['para_blocks']),row['filtered_toc'])),axis=1)       
+'''df['filtered_para']=df.apply(lambda row:(match_parastart(lower_all(row['para_blocks']),row['filtered_toc'])),axis=1)       
     
 #para_blocks.apply(lambda p: [keeper if para_startswith(keeper,['Metabolism']) else 'NM' for keeper in p])
 df['filtered_para'].value_counts().head()
@@ -323,7 +323,7 @@ df_block=df_block.fillna('NO_SENTENCE')
 df_block2=df_block.reset_index()
 melted_df=pd.melt(df_block2,id_vars='index')
 melted_df=melted_df.sort_values(by='index')
-melted_df.to_excel('block_text.xlsx')
+melted_df.to_excel('block_text.xlsx')'''
 
 
 
@@ -356,9 +356,9 @@ def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN'):
                       valid_wiki=False
           if valid_wiki:
                   return wikipage
-ginseng=wiki_search('ginseng')
+#ginseng=wiki_search('ginseng')
 
-desired_words=['name','synonym','taxonomy','genus','species','common name','other name','also called']
+#desired_words=['name','synonym','taxonomy','genus','species','common name','other name','also called']
 
 def grab_wiki_sections(wikipage,desired_words,identifier=None):
     section_dict=defaultdict(lambda:'not_captured')
@@ -383,10 +383,10 @@ def grab_wiki_sections(wikipage,desired_words,identifier=None):
     return section_dict
     
 
-grab_wiki_sections(ginseng,desired_words)   
+#grab_wiki_sections(ginseng,desired_words)   
 
 ###clean up list##
-super_string='|'.join(super_duper)
+'''super_string='|'.join(super_duper)
 super_string=super_string.replace('*','')
 super_string=super_string.replace('Equivalent plant:','|')
 super_string=super_string.replace('[Syn.','|')
@@ -401,7 +401,7 @@ super_string=super_string.strip()
 super_string=re.sub(' +', ' ',super_string)
 super_cleaned=super_string.split('|')
 
-with open('listnames.txt', 'w') as filehandle:
+with open('ListHerbNames.txt', 'w') as filehandle:
     for listitem in super_cleaned:
         filehandle.write('%s\n' % listitem)
 i=0
@@ -429,7 +429,7 @@ for d in names:
         
 names_df=pd.DataFrame.from_dict(full_dict).transpose()
 
-names_df.to_csv('wiki_scraped_names.csv')
+names_df.to_csv('wiki_scraped_names.csv')'''
         
 '''plants=wikipedia.WikipediaPage("Category:Plants used in traditional Chinese medicine")
 ginseng=wikipedia.WikipediaPage("ginseng")

@@ -54,7 +54,9 @@ def relavent_contents(wikipage,keywords,word2vec_model):
         
         kept.append(np.argmax(cosine(key_vec,vecs)))
     return table_of_contents[kept]
-    
+
+top_words=np.asarray(['adverse','interact','warn','effect','side effect','react','toxic','regulate','death','poison','allergy','risk','overdose','safe','unsafe'])
+   
 def  summarize_wiki_page(wikipage,ratio=.1,contents,word_count=None):
     subset_dict=grab_wiki_sections(wikipage,contents)
     summary=[]
