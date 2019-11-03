@@ -27,6 +27,8 @@ import os
 
 wv_from_bin = KeyedVectors.load_word2vec_format("wikipedia-pubmed-and-PMC-w2v.bin", binary=True)
 nlp = spacy.load("scilg")
+merge_nps = nlp.create_pipe("merge_noun_chunks")
+nlp.add_pipe(merge_nps)
 
 verb_clause_pattern = r'<VERB>*<ADV>*<PART>*<VERB>+<PART>*'
 
@@ -266,7 +268,7 @@ def  summarize_wiki_page(wikipage,contents,ratio=.1,word_count=None):
     return ''.join(summary)
 
 
-def subtree_matcher(doc):
+def subtree_matcher(doc,find_rel=False):
   subjpass = 0
 
   for i,tok in enumerate(doc):
@@ -285,17 +287,26 @@ def subtree_matcher(doc):
 
       if tok.dep_.endswith("obj") == True:
         x = tok.text
-  
+      if (tok.dep_.startswith('conj') == True) and x:
+          y+=' '+tok.text
   # if subjpass == 0 then sentence is not passive
   else:
     for i,tok in enumerate(doc):
       if tok.dep_.endswith("subj") == True:
         x = tok.text
-
+        x_pos=i
       if tok.dep_.endswith("obj") == True:
         y = tok.text
-
-  return x,y
+        y_pos=i
+      if (tok.dep_.startswith('conj') == True) and x:
+          y+=', '+tok.text
+          y_pos=i
+  if find_rel:
+      rel=get_relation(doc[:np.max([x_pos,y_pos])].text)
+      
+      return x,rel,y
+  else:
+      return x,y
 
 def get_relation(sent):
 
@@ -319,4 +330,10 @@ def get_relation(sent):
 
   return(span.text)
   
-  
+'''
+example usage:
+    doc=nlp("Ginger may treat inflammation and mild motion sickness.")
+    subtree_matcher(doc): ('Ginger', 'inflammation, mild motion sickness')
+    subtree_matcher(doc,find_rel=True): ('Ginger', 'treat', 'inflammation, mild motion sickness')
+'''
+    
