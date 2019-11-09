@@ -6,6 +6,7 @@ Created on Tue Oct 29 07:16:41 2019
 @author: gurdit.chahal
 """
 exec(open('wiki_scrape.py').read())
+import ast 
 from spacy.matcher import Matcher 
 from spacy.tokens import Span 
 import numpy as np
@@ -241,24 +242,37 @@ def filter_docs(corpus, texts, labels, condition_on_doc):
 
     return (corpus, texts, labels)
 
-
-def relavent_contents(wikipage,keywords,word2vec_model):
-    table_of_contents=get_toc(wikipage)
+#word2vec_model.n_similarity
+#https://radimrehurek.com/gensim/models/keyedvectors.html
+def relavent_contents(wikipage,keywords,word2vec_model,toc_mode=False,threshold=False):
+    #expect list of table of contents or wikipage to extract contents from
+    if toc_mode:
+        if type(wikipage)==list:
+            table_of_contents=wikipage
+        elif type(wikipage)==str:
+            table_of_contents=ast.literal_eval(wikipage)
+        else:
+            table_of_contents=[]
+    else:
+        table_of_contents=get_toc(wikipage)
     table=[content.lower() for content in table_of_contents]
-    doc=','.join(table).split(',')
-    vecs=[]
+    f_content=[]
     for content in table:
-        filtered_content=[word_vectors.word2vec_model.word_vec(c, use_norm=True) for c in content if c in word2vec_model.vocab]
-        avg_vec=np.mean(filtered_content,axis=0)
-        vecs.append(avg_vec)
-        kept=[]
-    for word in keywords:
-        key_vec=word2vec_model.word_vec(word, use_norm=True)
-        
-        kept.append(np.argmax(cosine(key_vec,vecs)))
-    return table_of_contents[kept]
+        filtered_content=[c for c in content.split() if c in word2vec_model.vocab]
+        f_content.append(filtered_content) #expect list of lists
+    kept=[]
+    for key in keywords:    
+        #take similarity between words or groups of words
+        sims=np.asarray([word2vec_model.n_similarity(key.split(),fc) for fc in f_content])
+        if threshold:
+            kept.extend(np.where(sims>threshold))
+        else:
+            kept.append(np.argmax(sims))
+            
+    kept=np.unique(kept)
+    return [table_of_contents[k] for k in kept]
 
-top_words=np.asarray(['adverse','interact','warn','effect','side effect','react','toxic','regulate','death','poison','allergy','risk','overdose','safe','unsafe'])
+top_words=np.asarray(['medicine','adverse','interact','warn','effect','side effect','react','toxic','regulate','death','poison','allergy','risk','overdose','safe','unsafe'])
    
 def  summarize_wiki_page(wikipage,contents,ratio=.1,word_count=None):
     subset_dict=grab_wiki_sections(wikipage,contents)
@@ -278,29 +292,35 @@ def subtree_matcher(doc,find_rel=False):
 
   x = ''
   y = ''
-
+  x_pos=0
+  y_pos=0
   # if subjpass == 1 then sentence is passive
   if subjpass == 1:
     for i,tok in enumerate(doc):
       if tok.dep_.find("subjpass") == True:
         y = tok.text
-
+        y_pos=max(i,y_pos)
       if tok.dep_.endswith("obj") == True:
         x = tok.text
-      if (tok.dep_.startswith('conj') == True) and x:
+        x_pos=max(i,x_pos)
+      if (tok.dep_.startswith('conj') == True) and y:
           y+=' '+tok.text
+          y_pos=max(i,y_pos)
+      if (tok.dep_.startswith('case') == True) and y:
+          y+=' '+tok.text
+          y_pos=max(i,y_pos)
   # if subjpass == 0 then sentence is not passive
   else:
     for i,tok in enumerate(doc):
       if tok.dep_.endswith("subj") == True:
         x = tok.text
-        x_pos=i
+        x_pos=max(i,x_pos)
       if tok.dep_.endswith("obj") == True:
         y = tok.text
-        y_pos=i
-      if (tok.dep_.startswith('conj') == True) and x:
+        y_pos=max(i,y_pos)
+      if (tok.dep_.startswith('nmod') == True) and y:
           y+=', '+tok.text
-          y_pos=i
+          y_pos=max(i,y_pos)
   if find_rel:
       rel=get_relation(doc[:np.max([x_pos,y_pos])].text)
       
@@ -308,7 +328,7 @@ def subtree_matcher(doc,find_rel=False):
   else:
       return x,y
 
-def get_relation(sent):
+def rule_get_relation(sent):
 
   doc = nlp(sent)
 
@@ -330,10 +350,54 @@ def get_relation(sent):
 
   return(span.text)
   
+verb = "<ADV>*<AUX>*<VERB><PART>*<ADV>*"
+word = "<NOUN|ADJ|ADV|DET|ADP>"
+preposition = "<ADP|ADJ>"
+
+rel_pattern = "( %s (%s* (%s)+ )? )+ " % (verb, word, preposition)
+grammar_long = '''REL_PHRASE: {\\%s}''' % rel_pattern
+
+
+def filter_spans(spans):
+    # Filter a sequence of spans so they don't contain overlaps
+    # For spaCy 2.1.4+: this function is available as spacy.util.filter_spans()
+    get_sort_key = lambda span: (span.end - span.start, -span.start)
+    sorted_spans = sorted(spans, key=get_sort_key, reverse=True)
+    result = []
+    seen_tokens = set()
+    for span in sorted_spans:
+        # Check for end - 1 here because boundaries are inclusive
+        if span.start not in seen_tokens and span.end - 1 not in seen_tokens:
+            result.append(span)
+        seen_tokens.update(range(span.start, span.end))
+    result = sorted(result, key=lambda span: span.start)
+    return result
+
+def extract_entity_relations(doc):
+    # Merge entities and noun chunks into one token
+    spans = list(doc.ents) + list(doc.noun_chunks)
+    spans = filter_spans(spans)
+    with doc.retokenize() as retokenizer:
+        for span in spans:
+            retokenizer.merge(span)
+
+    relations = []
+    for enty in filter(lambda w: w.ent_type_ == "ENTITY", doc):
+        if enty.dep_ in ("attr", "dobj"):
+            subject = [w for w in enty.head.lefts if w.dep_=="nsubj"]
+            if subject:
+                subject = subject[0]
+                relations.append((subject, enty))
+        elif enty.dep_ == "pobj" and enty.head.dep_ == "prep":
+            relations.append((enty.head.head, enty))
+    return relations
+
+  
 '''
 example usage:
     doc=nlp("Ginger may treat inflammation and mild motion sickness.")
+    #just entities
     subtree_matcher(doc): ('Ginger', 'inflammation, mild motion sickness')
+    #entity 1 relation to entity 2
     subtree_matcher(doc,find_rel=True): ('Ginger', 'treat', 'inflammation, mild motion sickness')
 '''
-    
