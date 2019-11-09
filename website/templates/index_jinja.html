@@ -1,51 +1,46 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <style>
-        body,html {
-            height:100%
+        body,
+        html {
+            height: 100%
         }
-        
-        section:nth-child(even){
-            background-color:#ddd;
+
+        section:nth-child(even) {
+            background-color: #ddd;
         }
-        
-        .section{
-            background-size:cover;
+
+        .section {
+            background-size: cover;
             background-position: center center;
-            width:100%;
-            min-height:100%;
-            padding-top:75px;
+            width: 100%;
+            min-height: 100%;
+            padding-top: 75px;
         }
-        
-        #herbert{
-            background-image: url({{ url_for('static', filename='img/background.png') }})
+
+        #herbert {
+            background-image: url('static/img/background.png')
         }
-        
+
         .bg-member {
-          background-color: #eee !important;
+            background-color: #eee !important;
         }
     </style>
-      
-    <script>
-        
-        function searchFunction() {   
-            location.href = encodeURI('/search?query=' + document.getElementById("search_input").value)
-        }
-        
-    </script>
-      
+
     <title>Herbert - Semantic Search Engine for Herbal Medicines</title>
-  </head>
-  
-  <body>
+</head>
+
+<body>
     <nav id="myNav" class="navbar navbar-dark bg-dark fixed-top navbar-expand-sm">
         <a class="navbar-brand" href="#">Herbert</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBarMain"><span class="navbar-toggler-icon"></span></button>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBarMain"><span
+                class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navBarMain">
             <ul class="navbar-nav">
                 <li class="nav-item"><a href="#team" class="nav-link">Team</a></li>
@@ -57,138 +52,174 @@
         <div>
             <div class="contrainer bg-white rounded mx-5">
 
-                    <div class="display-4 mb-5">Herbal Medicine Search</div>
-                    <p/>
+                <div class="display-4 mb-5">Herbal Medicine Search</div>
+                <p />
 
-                    <p class="text-dark">Search by herb name or medical condition</p>
-                    
-                    <div class="input-group mb-5">
-                        <input id="search_input" type="text" class="form-control" placeholder="e.g. ginger"/>
-                        <div class="input-group-append">
-                            <input type="button" onclick="searchFunction()" value="Search" class="btn btn-outline-secondary" />
+                <p class="text-dark">Search by herb name or medical condition</p>
+
+                <form class="input-group mb-5" method="POST">
+                    <input type="text" class="form-control" placeholder="e.g. ginger" name="search_query" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-secondary">Search</button>
+                    </div>
+                </form>
+
+
+                <div class="text-dark small">
+                    <p>Common Herbs:
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Ginger">Ginger</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Ginseng">Ginseng</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Tumeric">Turmeric</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Astragalus">Astragalus</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Cinnamon">Cinnamon</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Lotus">Lotus</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="{{url_for('submit', query='Dittany Root Bark')}}">Dittany Root Bark</a>
+                    </p>
+                </div>
+
+                <div class="text-dark small">
+                    <p>Common Conditions:
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Headache">Headache</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Sleep%20Problem">Sleep Problem</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Stomach%20Ache">Stomach Ache</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="{{url_for('submit', query='Weight Loss')}}">Weight Loss</a>
+                        <a class="px-1 text-dark" style="text-decoration: underline;"
+                            href="/search?query=Dizziness">Dizziness</a>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        </div>
+
+    </section>
+
+    <section id="team" class="section bg-member mb-5">
+        <div class="container">
+            <div class="display-4">Team</div>
+            <p />
+            <p />
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img class="card-img-top" src="static/img/female.jpeg" width="42">
+                        <div class="card-body">
+                            <div class="card-title">Emmy Lau</div>
+                            <p class="card-text">Product Manager</p>
                         </div>
                     </div>
-                          
-                    
-                    <div class="text-dark small">
-                        <p>Common Herbs:
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Ginger">Ginger</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Ginseng">Ginseng</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Tumeric">Turmeric</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Astragalus">Astragalus</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Cinnamon">Cinnamon</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Lotus">Lotus</a>    
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Dittany%20Root%20Bark">Dittany Root Bark</a>                            
-                        </p>
-                    </div>
-                    
-                    <div class="text-dark small">
-                        <p>Common Conditions:
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Headache">Headache</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Sleep%20Problem">Sleep Problem</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Stomach%20Ache">Stomach Ache</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Weight%20Loss">Weight Loss</a>
-                        <a class="px-1 text-dark" style="text-decoration: underline;" href="/search?query=Dizziness">Dizziness</a>                            
-                        </p>
-                    </div>
-                    
                 </div>
-                
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img class="card-img-top" src="static/img/male.png">
+                        <div class="card-body">
+                            <div class="card-title">Emmy Lau</div>
+                            <p class="card-text">Product Manager</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img class="card-img-top" src="static/img/male.png">
+                        <div class="card-body">
+                            <div class="card-title">Emmy Lau</div>
+                            <p class="card-text">Product Manager</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card">
+                        <img class="card-img-top" src="static/img/male.png">
+                        <div class="card-body">
+                            <div class="card-title">Emmy Lau</div>
+                            <p class="card-text">Product Manager</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            
         </div>
-        
     </section>
-      
-    <section id="team" class="section bg-member mb-5">
-      <div class="container">
-          <div class="display-4">Team</div>
-          <p/>
-          <p/>
-          <div class="row">
-              <div class="col-sm-3">
-                <div class="card">
-                    <img class="card-img-top" src="static/img/female.jpeg" width="42">
-                    <div class="card-body">
-                        <div class="card-title">Emmy Lau</div>
-                        <p class="card-text">Product Manager</p>
-                    </div>                  
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="card">
-                    <img class="card-img-top" src="static/img/male.png">
-                    <div class="card-body">
-                        <div class="card-title">Emmy Lau</div>
-                        <p class="card-text">Product Manager</p>
-                    </div>                  
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="card">
-                    <img class="card-img-top" src="static/img/male.png">
-                    <div class="card-body">
-                        <div class="card-title">Emmy Lau</div>
-                        <p class="card-text">Product Manager</p>
-                    </div>                  
-                </div>
-              </div>
-              <div class="col-sm-3">
-                <div class="card">
-                    <img class="card-img-top" src="static/img/male.png">
-                    <div class="card-body">
-                        <div class="card-title">Emmy Lau</div>
-                        <p class="card-text">Product Manager</p>
-                    </div>                  
-                </div>
-              </div>
-          </div>
-      </div>      
-    </section>
-        
-      
-      
+
+
+
     <section id="about" class="section bg-success text-light">
         <div class="container">
             <div class="display-4 mb-5">About</div>
-        
-            
+
+
             <div class="font-weight-bold mb-3">Describe the problem you are solving. </div>
-            
+
             <div class="font-weight-light mb-3">
-Alternative medicine is of growing interest internationally to patients [1,2,4,5,7,17] The problem we aim to solve is the lack of centralization over alternative medicine knowledge and ability to search for it by the average user [1,2]. In particular we aim to centralize information around treatment, usage, and other aspects of Traditional Chinese Medicine. Our team interviewed around 10 consumers, TCM practitioners, western doctors and pharmacists and found that most of them don’t have the details of the herbal products and its interactions with western medicine.  Even though there are websites, blogs and tools that talk about herbal medicines, users have to spend a lot of time to sift through the search results to find the right information [1,2,4]. An NBC news report found that “80 percent of Internet users, or about 93 million Americans, have searched for a health-related topic online”  with alternative medicine accounting for about a third of the search topics [1].  Moreover, with the top/first result + description being the top influencers for consulting online [2,4], it becomes imperative to deliver the relevant and correct information to the average patient.  We propose to build a vertical semantic search engine for herbal products which provide contextual answer to user queries about TCM herbs.
+                Alternative medicine is of growing interest internationally to patients [1,2,4,5,7,17] The problem we
+                aim to solve is the lack of centralization over alternative medicine knowledge and ability to search for
+                it by the average user [1,2]. In particular we aim to centralize information around treatment, usage,
+                and other aspects of Traditional Chinese Medicine. Our team interviewed around 10 consumers, TCM
+                practitioners, western doctors and pharmacists and found that most of them don’t have the details of the
+                herbal products and its interactions with western medicine. Even though there are websites, blogs and
+                tools that talk about herbal medicines, users have to spend a lot of time to sift through the search
+                results to find the right information [1,2,4]. An NBC news report found that “80 percent of Internet
+                users, or about 93 million Americans, have searched for a health-related topic online” with alternative
+                medicine accounting for about a third of the search topics [1]. Moreover, with the top/first result +
+                description being the top influencers for consulting online [2,4], it becomes imperative to deliver the
+                relevant and correct information to the average patient. We propose to build a vertical semantic search
+                engine for herbal products which provide contextual answer to user queries about TCM herbs.
             </div>
-       
-            <div class="font-weight-bold mb-3">Why is this a compelling and impactful problem to solve? Why is this a big opportunity?</div>
-  
+
+            <div class="font-weight-bold mb-3">Why is this a compelling and impactful problem to solve? Why is this a
+                big opportunity?</div>
+
             <div class="font-weight-light mb-3">
-Taking a step back and zooming out, this problem isn’t just national but international as there is evidently little to no consideration for the dual “western” medication practices combined with traditional/alternative medication practices [12,13,18]. The global prevalence [10,12,14] is showcased by market demand as the Global Herbal Supplements market  accounted  for $49.1 billion in 2016 and is expected to reach $86.7 billion by 2022 [17]. Moreover in particular to search, this opportunity is big in terms of having a wide set of users as well as being the third most pertinent use case for the internet for the average user [1].
+                Taking a step back and zooming out, this problem isn’t just national but international as there is
+                evidently little to no consideration for the dual “western” medication practices combined with
+                traditional/alternative medication practices [12,13,18]. The global prevalence [10,12,14] is showcased
+                by market demand as the Global Herbal Supplements market accounted for $49.1 billion in 2016 and is
+                expected to reach $86.7 billion by 2022 [17]. Moreover in particular to search, this opportunity is big
+                in terms of having a wide set of users as well as being the third most pertinent use case for the
+                internet for the average user [1].
             </div>
-            
+
         </div>
-      </section>
+    </section>
     <footer class="bg-dark text-light">
         <div class="container  mb-5">
             <div class="row">
-            <div class="col-md-3">
-            <p>Contact Us</p>
-            </div>
-            <div class="col-md-3">
-            <p>Copyright</p>
-            </div>
+                <div class="col-md-3">
+                    <p>Contact Us</p>
+                </div>
+                <div class="col-md-3">
+                    <p>Copyright</p>
+                </div>
             </div>
         </div>
     </footer>
-       
-      
-      
+
+
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!--
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    
-    <script src="js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+    <script src="js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>
