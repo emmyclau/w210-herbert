@@ -292,6 +292,17 @@ def group_np(doc):
                 retokenizer.merge(span)
       return doc
 
+def collocate_np(doc):
+    doctext=doc.text
+    spans = list(doc.ents) + list(doc.noun_chunks)
+    spans = spacy.util.filter_spans(spans)
+    #print(spans)
+    for span in spans:
+        collocation='_'.join(span.text.split())
+       # print(collocation)
+        doctext=doctext.replace(span.text,collocation)
+    return doctext
+
 def break_clauses(doc):
     #todo: break for each subject
     pass
