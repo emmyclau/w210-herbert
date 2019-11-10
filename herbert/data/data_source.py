@@ -61,7 +61,7 @@ class DataSource:
     herb_dict = None
 
     def __init__(self):
-        self.herb_dict = pd.read_csv('data/meAndQi.csv').set_index(
+        self.herb_dict = pd.read_csv('herbert/data/meAndQi.csv').set_index(
             'Herb_Name').to_dict()
 
     def get_herb(self, name):
