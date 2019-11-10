@@ -25,6 +25,8 @@ from bs4 import BeautifulSoup as bs
 from collections import defaultdict
 import json
 import os
+import clausiepy as clausie
+from itertools import chain
 
 wv_from_bin = KeyedVectors.load_word2vec_format("wikipedia-pubmed-and-PMC-w2v.bin", binary=True)
 nlp = spacy.load("scilg")
@@ -444,7 +446,37 @@ def extract_relations(doc):
     
     return triples
 
-  
+def extract_clausieSVO(text):
+    clauses=clausie.clausie(text)
+    svo=[]
+    for clause in clauses:
+        if clause['type']=='SVO':
+            svo.append(clause)
+    return svo
+
+#https://github.com/mmxgn/spacy-clausie
+def extract_clausieProp(text,clause_type=None):
+    try:
+        clauses=clausie.clausie(text)
+        clause_list=[]
+        if clause_type:
+            for clause in clauses:
+                if clause['type']in clause_type :
+                 clause_list.append(clause)   
+                else: 
+                    pass
+        propositions = clausie.extract_propositions(clauses)
+    except IndexError:
+        propositions=[]
+    return propositions
+
+def keep_relevant_verbs(entity_triple,verb_keywords):
+    #todo only keep triples that are relevant
+    pass
+
+def flatten_list(l):
+    return list(chain.from_iterable(l))
+
 '''
 example usage:
     doc=nlp("Ginger may treat inflammation and mild motion sickness.")

@@ -18,8 +18,9 @@ import pandas as pd
 from collections import defaultdict
 import json
 import os
+from flatten_dict import flatten
 
-def get_toc(html,name_find=False,name_pattern="(?<=>)[^<]*"):
+def get_toc(html,name_find=False,name_pattern="(?<=>)[^<]*",find_subsection=True):
     soup=bs(html)
     toc=soup.find_all(class_="toctext",text=True)
     names=[]
@@ -30,6 +31,12 @@ def get_toc(html,name_find=False,name_pattern="(?<=>)[^<]*"):
         for content in toc:
             names.append(content.text)  
     return names
+
+#mediawiki version for tables with subsections
+def get_toc_mw(wmpage):
+    toc=flatten(wmpage.table_of_contents,keep_empty_types=(dict,))
+    toc=list(toc.keys()) #list of tuples where order is key,subsection1,subsection of sub1
+    return toc
 
 def get_ref(wiki_page,filter_pattern=False):
     try:
@@ -381,7 +388,21 @@ def grab_wiki_sections(wikipage,desired_words,identifier=None):
                else:
                    continue
     return section_dict
-    
+
+def wiki_topic_text(wikipage,topic):
+    if isinstance(topic,str):
+        try:
+            return wikipage.section(topic)
+        except Exception:
+            return 'No topic text.'
+    elif isinstance(topic,tuple):
+        content=''
+        for section in topic:
+            content+=wikipage.section(section)
+        return content
+    else:
+        return 'Invalid topic.'
+            
 
 #grab_wiki_sections(ginseng,desired_words)   
 
