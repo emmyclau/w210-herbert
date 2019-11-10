@@ -322,11 +322,12 @@ def subtree_matcher(doc,find_rel=False):
           y+=', '+tok.text
           y_pos=max(i,y_pos)
   if find_rel:
-      rel=get_relation(doc[:np.max([x_pos,y_pos])].text)
+      rel=rule_get_relation(doc[:np.max([x_pos,y_pos])].text)
       
       return x,rel,y
   else:
       return x,y
+
 
 def rule_get_relation(sent):
 
@@ -391,6 +392,23 @@ def extract_entity_relations(doc):
         elif enty.dep_ == "pobj" and enty.head.dep_ == "prep":
             relations.append((enty.head.head, enty))
     return relations
+
+def extract_relations(doc):
+
+    spans = list(doc.ents) + list(doc.noun_chunks)
+    for span in spans:
+        span.merge()
+    
+    triples = []
+        
+    for ent in doc.ents:
+        preps = [prep for prep in ent.root.head.children if prep.dep_ == "prep"]
+        for prep in preps:
+            for child in prep.children:
+                triples.append((ent.text, "{} {}".format(ent.root.head, prep), child.text))
+            
+    
+    return triples
 
   
 '''
