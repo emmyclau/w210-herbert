@@ -282,9 +282,21 @@ def  summarize_wiki_page(wikipage,contents,ratio=.1,word_count=None):
     return ''.join(summary)
 
 
+def group_np(doc):
+      spans = list(doc.ents) + list(doc.noun_chunks)
+      spans = spacy.util.filter_spans(spans)
+      with doc.retokenize() as retokenizer:
+            for span in spans:
+                retokenizer.merge(span)
+      return doc
+
+def break_clauses(doc):
+    #todo: break for each subject
+    pass
+    
 def subtree_matcher(doc,find_rel=False):
   subjpass = 0
-
+  
   for i,tok in enumerate(doc):
     # find dependency tag that contains the text "subjpass"    
     if tok.dep_.find("subjpass") == True:
@@ -321,13 +333,34 @@ def subtree_matcher(doc,find_rel=False):
       if (tok.dep_.startswith('nmod') == True) and y:
           y+=', '+tok.text
           y_pos=max(i,y_pos)
-  if find_rel:
-      rel=rule_get_relation(doc[:np.max([x_pos,y_pos])].text)
+  if find_rel and x and y:
+      rel=get_relation(doc[:np.max([x_pos,y_pos])].text)
       
       return x,rel,y
   else:
       return x,y
 
+def get_relation(sent):
+
+  doc = nlp(sent)
+
+  # Matcher class object 
+  matcher = Matcher(nlp.vocab)
+
+  #define the pattern 
+  pattern = [{'DEP':'ROOT'}, 
+            {'DEP':'prep','OP':"?"},
+            {'DEP':'agent','OP':"?"},  
+            {'POS':'ADJ','OP':"?"}] 
+
+  matcher.add("matching_1", None, pattern) 
+
+  matches = matcher(doc)
+  k = len(matches) - 1
+
+  span = doc[matches[k][1]:matches[k][2]] 
+
+  return(span.text)
 
 def rule_get_relation(sent):
 
@@ -381,6 +414,7 @@ def extract_entity_relations(doc):
     with doc.retokenize() as retokenizer:
         for span in spans:
             retokenizer.merge(span)
+    
 
     relations = []
     for enty in filter(lambda w: w.ent_type_ == "ENTITY", doc):
@@ -418,4 +452,8 @@ example usage:
     subtree_matcher(doc): ('Ginger', 'inflammation, mild motion sickness')
     #entity 1 relation to entity 2
     subtree_matcher(doc,find_rel=True): ('Ginger', 'treat', 'inflammation, mild motion sickness')
+import clausiepy as clausie
+clauses = clausie.clausie('A preliminary study suggested that eating acai fruit pulp might reduce blood sugar and cholesterol levels in overweight people.')
+propositions = clausie.extract_propositions(clauses)
+clausie.print_propositions(propositions)
 '''
