@@ -11,12 +11,25 @@ from whoosh.qparser import QueryParser  # used in Search section
 index_path = 'herbert/index'
 ix = open_dir(index_path)
 
+
+def whoosh_search(search_query, index=ix):
+    parser = QueryParser("description", schema=index.schema)
+    query = parser.parse(search_query)
+    with index.searcher() as s:
+        results = s.search(query)
+        print(len(results))
+        for r in results:
+            print(r, r.score)
+    return results
+
+
 #%%
 
+# build the index
 if __name__ == "__main__":
 
     # Define Schema.  Defines fields to be searched.
-    #%%
+
     schema = Schema(
         herb=TEXT(stored=True
                  ),  # Set stored=True if field should be returned in results
@@ -60,32 +73,3 @@ if __name__ == "__main__":
                                 safe=row[10],
                                 interact=row[11])
     writer.commit()
-# #%%
-# # Search on field in index using given search term.
-# with ix.searcher(weighting=scoring.BM25F) as s:
-#     parser = QueryParser("content", schema=index.schema)
-#     query = parser.parse(search_query)
-#     myquery = (Term("description",
-#                     u"fertility"))  #which field to search on, which word
-#     results = s.search(myquery)
-#     print(len(results))
-#     for r in results:
-#         print(r, r.score)
-
-#%%
-
-
-def whoosh_search(search_query, index):
-    parser = QueryParser("description", schema=index.schema)
-    query = parser.parse(search_query)
-    with index.searcher() as s:
-        results = s.search(query)
-        print(len(results))
-        for r in results:
-            print(r, r.score)
-    return results
-
-
-whoosh_search('fertility', ix)
-
-#%%
