@@ -26,7 +26,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
 
-    # db.init_app(app)
+    db.init_app(app)
 
     # Import and register all blueprints
     from .views import errors
@@ -37,8 +37,5 @@ def create_app():
 
     from .views import home_views
     app.register_blueprint(home_views.bp)
-
-    from .views import search
-    app.register_blueprint(search.bp)
 
     return app

@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from herbert.services.common import common_herbs, common_conditions, get_team
+from herbert.services.search import whoosh_search
 from herbert import ds
+from whoosh.index import open_dir
 
 bp = Blueprint('home', __name__)
 
@@ -35,6 +37,10 @@ def submit():
     else:
         query = request.args.get('query')
     print(query)
+
+    index_path = 'herbert/index'
+    ix = open_dir(index_path)
+    whoosh_search(query, ix)
 
     herb_name = query
     herb = ds.get_herb(herb_name)

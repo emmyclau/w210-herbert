@@ -25,3 +25,10 @@ Directory layout
 │   │   └── # All flask blueprints
 │   └── __init__.py # Contains the function to build the app
 ```
+
+Run by running 
+
+```bash
+$ export FLASK_APP="herbert"
+$ flask run
+```
