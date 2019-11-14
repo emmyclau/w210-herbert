@@ -105,9 +105,9 @@
             </div>
             <div class="col-md-5 mt-5 mb-3">
               <div class="input-group">
-                <input id="search_input" type="text" class="form-control" placeholder="herb name or medical condition"/>
+                <input type="text" id="search_input" class="form-control" placeholder="herb name or medical condition"/>
                 <div class="input-group-append">
-                    <button class="btn btn-outline-tertiary" onclick="searchFunction()" type="button">Search</button>
+                    <button type="button" id="search_button" class="btn btn-outline-tertiary" onclick="searchFunction()" >Search</button>
                 </div>
               </div>
             </div>
@@ -116,82 +116,64 @@
     
     <section id="main-container" class="container-fluid">
         
-        <div class="small mx-5 mb-2 mt-3 align-bottom">25 Results Found for {{query}}</div>
+        <div class="small font-weight-light mx-5 mb-2 mt-3 align-bottom">{{search_result|length}} Results Found for {{query}}</div>
         
         <div id="column1" class="col-md-3 mx-3">  
-            
+          
+          {% for item in search_result %}    
           <div class="card mx-2 mb-2">
             <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Ginger</a>
-                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
+                <a href="#" class="h5 card-title text-dark">{{ item["english_name"][0] }}</a>
+                
+                <p class="card-text small">Conditions: 
+                {% for cond in item["new_conditions"][:-1] %}
+                {% set new_cond = cond.split('|') %}
+                {{new_cond[0]}},
+                {% endfor %}
+                {% set new_cond = item["new_conditions"][-1].split('|') %}
+                {{new_cond[0]}}
+                </p>                
             </div>
           </div>
+          {% endfor %}
 
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Cinnamon</a>
-                <p class="card-text small">Cinnamon contains several antioxidants that help <b>ease digestion</b>...</p>
-                <p class="card-text small">Side effects: <b>stomach chills</b></p>
-            </div>
-          </div>
-            
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Cumin</a>
-                <p class="card-text small">Cumin seeds may help reduce indigestion and excess <b>stomach acids</b>...</p>                
-            </div>
-          </div>
-
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Ginger</a>
-                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
-            </div>
-          </div>
-            
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Ginger</a>
-                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
-            </div>
-          </div>
-            
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">Ginger</a>
-                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
-            </div>
-          </div>
+          
         </div>
         
         
     <article id="column2" class="col-md-8 mr-5 mb-5">
             <div class="d-flex w-100 justify-content-between">
-                <div class="h1">{{english_name}} </div>
+                <div class="h1">{{english_name[0] if english_name }} </div>
                 <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
             </div>    
             
             {% if pinyin_name|length > 1 %} 
-            <div class="medium mb-4">({{pinyin_name}}) </div>
+            <div class="medium mb-4">({{pinyin_name[0] if pinyin_name }}) </div>
             {% endif %}
 
             <div style="white-space: pre-line;">{{intro}}</div>
             
             <div class="h2 mt-5 mb-3">Health Benefits / Conditions</div>
 
+            {% if conditions is not none %}
             {% for condition in conditions %}
-            <div class="d-flex w-100 justify-content-between">              
-                <p>{{condition}}</p>
+            <div class="d-flex w-100 justify-content-between">   
+                {% set items = condition.split('|') %}
+                <p>{{items[0]}}</p>
                 <p class="text-right font-weight-light small">data source: 
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                    {% for item in items[1:-1] %}
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
+                    {% endfor %}
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
                 </p>
             </div>  
             {% endfor %}
+            {% endif %}
 
-            <div class="h2 mt-5 mb-3">Side Effects</div>
         
+            {% if sideeffects is not none %}
+            <div class="h2 mt-5 mb-3">Side Effects</div>
+            
             {% for sideeffect in sideeffects %}
             <div class="d-flex w-100 justify-content-between">
                 <p>{{sideeffect}}</p>
@@ -202,19 +184,25 @@
                 </p>
             </div>  
             {% endfor %}
+            {% endif %}
 
-            <div class="h2 mt-5 mb-3">Interactions with Medications</div>
         
+            {% if interactions is not none %}
+            <div class="h2 mt-5 mb-3">Interactions with Medications</div>
+            
             {% for interaction in interactions %}
             <div class="d-flex w-100 justify-content-between">
-                <p>{{interaction}}</p>
+                {% set items = interaction.split('|') %}
+                <p>{{items[0]}}</p>
                 <p class="text-right font-weight-light small">data source: 
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                    {% for item in items[1:-1] %}
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
+                    {% endfor %}
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
                 </p>
             </div>  
             {% endfor %}
+            {% endif %}
 
             <div class="d-flex w-100 justify-content-between  mt-5 mb-3">
                 <div class="h2">Others</div>
@@ -230,6 +218,15 @@
       
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+    var input = document.getElementById("search_input");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+       event.preventDefault();
+       document.getElementById("search_button").click();
+      }
+    });
+    </script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
