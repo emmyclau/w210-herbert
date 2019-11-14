@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request
 from flask_bootstrap import Bootstrap
-from data_source import DataSource 
+from data_source import DataSource
+from search import SearchEngine
 import urllib.parse
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
+
 ds = DataSource()
+se = SearchEngine(ds)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -14,27 +17,31 @@ def index():
 
 
 @app.route('/search', methods=['GET'])
-def submit():
+def search():
     
+    # get query
     query = request.args.get('query')  
-    #print(query)
     query = urllib.parse.unquote(query)
-    #print(query)
-    
-    herb_name = query
-    herb = ds.get_herb(herb_name)
-    
-    #print(herb.pinyin_name)
+
+    # search result 
+    search_result = se.search(query)
+   
+    if len(search_result) > 0:
+        herb = search_result[0]
+    else:
+        search_result = {}
+        herb = {}
     
     return render_template('result_jinja.html', \
                            query=query, \
-                           english_name=herb_name, \
-                           pinyin_name=herb.pinyin_name, \
-                           intro=herb.intro, \
-                           conditions=herb.conditions, \
-                           sideeffects=herb.sideeffects, \
-                           interactions=herb.interactions, 
-                           others=herb.others
+                           search_result = search_result,
+                           english_name=herb.get('english_name', ''), \
+                           pinyin_name=herb.get('pinyin_name', ''), \
+                           intro=herb.get('intro', ''), \
+                           conditions=herb.get('new_conditions'), \
+                           sideeffects=herb.get('sideeffects'), \
+                           interactions=herb.get('interactions'), 
+                           others=herb.get('others', '')
                           )
 
 @app.errorhandler(404)
@@ -44,4 +51,4 @@ def not_found(e):
 
 
 if __name__ == '__main__': 
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
