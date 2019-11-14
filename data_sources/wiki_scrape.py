@@ -10,6 +10,7 @@ Created on Wed Oct  2 13:43:34 2019
 #meds=list(drug_dict.keys())[6:181]
 
 import wikipedia
+from mediawiki import MediaWiki
 import urllib.request
 import requests
 from bs4 import BeautifulSoup as bs
@@ -19,6 +20,8 @@ from collections import defaultdict
 import json
 import os
 from flatten_dict import flatten
+
+wikipediamw = MediaWiki()
 
 def get_toc(html,name_find=False,name_pattern="(?<=>)[^<]*",find_subsection=True):
     soup=bs(html)
@@ -335,17 +338,20 @@ melted_df.to_excel('block_text.xlsx')'''
 
 
 ###herb names#####
-def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN'):
+def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN',return_type='page_only'):
           valid_wiki=True
+          page_used='No page found'
           #if search term is NAN then just pass
           if (nan_pattern) and (search_term==nan_pattern):
                   valid_wiki=False 
           else:
               try:
+                  page_used=search_term
                   wikipage=wikipedia.page(search_term)
               except wikipedia.DisambiguationError as e:
                   known_page=e.options[0]
                   try:
+                      page_used=known_page
                       wikipage=wikipedia.WikipediaPage(known_page)
                   except wikipedia.PageError:
                       valid_wiki=False
@@ -353,16 +359,20 @@ def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN'):
                   search_result=wikipedia.search(search_term)
                   if search_result:
                       try:
+                          page_used=search_result[0]
                           wikipage=wikipedia.page(search_result[0])
                       except wikipedia.DisambiguationError as e:
                           known_page=e.options[0]
+                          page_used=known_page
                           wikipage=wikipedia.WikipediaPage(known_page)
                       except wikipedia.PageError:
                           valid_wiki=False
                   else:
                       valid_wiki=False
-          if valid_wiki:
+          if (valid_wiki) and return_type=='page_only':
                   return wikipage
+          else:
+              return wikipage,page_used
 #ginseng=wiki_search('ginseng')
 
 #desired_words=['name','synonym','taxonomy','genus','species','common name','other name','also called']

@@ -276,11 +276,18 @@ def relavent_contents(wikipage,keywords,word2vec_model,toc_mode=False,threshold=
 
 top_words=np.asarray(['medicine','adverse','interact','warn','effect','side effect','react','toxic','regulate','death','poison','allergy','risk','overdose','safe','unsafe'])
    
-def  summarize_wiki_page(wikipage,contents,ratio=.1,word_count=None):
-    subset_dict=grab_wiki_sections(wikipage,contents)
+def  summarize_wiki_page(wikipage,contents,wikisec=False,ratio=.1,word_count=None):
+    if wikisec:
+        subset_dict=grab_wikisec_toc(wikipage,contents)
+    else:   
+        subset_dict=grab_wiki_sections(wikipage,contents)
     summary=[]
     for key,val in subset_dict.items():
-        summary.append(summarize(val,ratio=ratio,word_count=word_count))
+        try:
+            summarized=summarize(val,ratio=ratio,word_count=word_count)
+            summary.append(summarized)
+        except ValueError:
+            continue  
     return ''.join(summary)
 
 
@@ -487,6 +494,42 @@ def keep_relevant_verbs(entity_triple,verb_keywords):
 
 def flatten_list(l):
     return list(chain.from_iterable(l))
+
+def grab_wikisec_toc(wikipage,toc):
+    section_dict=defaultdict(lambda:'not_captured')
+    for topic in toc:
+        section_dict[topic]=wikipage.section(topic)
+    return section_dict
+
+def wiki_summary(wikipage,toc,relevant_toc,mode='multi',wikisec=True,word_count=150):
+    wikisum=wikipage.summary
+    wikisum_len=len(wikisum.split())
+    if toc:#if non-empty table of contents
+        sum_fields=list(set(toc).difference(set(relevant_toc)))
+        if mode=='multi':
+            sum_sum=summarize_wiki_page(wikipage,sum_fields,wikisec=wikisec)
+            sum_total=wikisum+sum_sum
+        elif mode=='single':
+            text=[]
+            subset_dict=grab_wikisec_toc(wikipage,sum_fields)
+            for key,content in subset_dict.items():
+                text.append(content)
+            try:
+                sum_sum=wikisum+''.join(text)
+            except TypeError:
+                sum_sum=wikisum
+            sum_sum_len=len(sum_sum.split())
+            if sum_sum_len<word_count:
+                sum_total=sum_sum
+            else:
+                sum_total=summarize(sum_sum,word_count=word_count)    
+    else:
+        if  wikisum_len<word_count:
+            sum_total=wikisum
+        else:    
+            sum_total=summarize(wikisum,word_count=word_count)
+    return sum_total   
+
 
 '''
 example usage:
