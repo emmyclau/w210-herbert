@@ -97,3 +97,22 @@ mq_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 
 mq_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/meAndQi_summary.csv')
 
+symmap=pd.read_excel('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/SymMap v1.0, SMHB file (1).xlsx')
+
+summary_dict=defaultdict(lambda:'')
+for row in symmap.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'Latin_name')
+    if isinstance(name,float):
+        name=getattr(row,'English_name')
+        if isinstance(name,float):
+            name==getattr(row,'Pinyin_name')
+    wikipage,page_used=wiki_search(name.split(';')[0],return_type='both')
+    print("Looked for "+name+" got "+page_used)
+    try:
+        wikipage=wikipediamw.page(page_used)
+        toc=wikipage.sections
+        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+    except:
+        pass
+sym_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+sym_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/symmap_summary.csv')
