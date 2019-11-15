@@ -116,3 +116,37 @@ for row in symmap.itertuples(index=True, name='Pandas'):
         pass
 sym_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 sym_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/symmap_summary.csv')
+
+medline_nat=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_natmedicines_1.csv')
+
+summary_dict=defaultdict(lambda:'')
+for row in medline_nat.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'herb')
+    wikipage,page_used=wiki_search(name,return_type='both')
+    print("Looked for "+name+" got "+page_used)
+    try:
+        wikipage=wikipediamw.page(page_used)
+        toc=wikipage.sections
+        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+    except:
+        pass
+mn_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+
+mn_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_natmedicines_summary.csv')
+
+medline_nih=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_attribs.csv')
+summary_dict=defaultdict(lambda:'')
+for row in medline_nih.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'herb')
+    wikipage,page_used=wiki_search(name,return_type='both')
+    print("Looked for "+name+" got "+page_used)
+    try:
+        wikipage=wikipediamw.page(page_used)
+        toc=wikipage.sections
+        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+    except:
+        pass
+mih_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+
+mih_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_summary.csv')
+
