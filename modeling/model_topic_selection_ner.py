@@ -78,3 +78,22 @@ for row in fifty_fundamental.itertuples(index=True, name='Pandas'):
     summary_dict[name]=wiki_summary(wikipage,toc,rtoc,mode='single')
 ff_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 ff_sum.columns=['Summary']
+ff_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/ff_summary.csv')
+
+mq=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/meAndQi.csv')
+
+summary_dict=defaultdict(lambda:'')
+for row in mq.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'herb')
+    wikipage,page_used=wiki_search(name,return_type='both')
+    print("Looked for "+name+" got "+page_used)
+    try:
+        wikipage=wikipediamw.page(page_used)
+        toc=wikipage.sections
+        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+    except:
+        pass
+mq_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+
+mq_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/meAndQi_summary.csv')
+
