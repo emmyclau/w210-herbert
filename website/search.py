@@ -7,7 +7,7 @@ from whoosh.fields import Schema, TEXT, ID, KEYWORD
 from whoosh.index import open_dir  # for opening index directory
 from whoosh import scoring  # used in Search section
 from whoosh.query import *  # used in Search section
-from whoosh.qparser import MultifieldParser
+from whoosh.qparser import *
 
 class SearchEngine:
 
@@ -83,7 +83,8 @@ class SearchEngine:
     
     
     def search(self, query):
-        parser = MultifieldParser(["name", "conditions"], self.schema)
+        parser = QueryParser(None, self.schema,termclass=terms.Variations,group=OrGroup)  #Ian Added Variations for searching on variations of the word, adeed OR group so it's either
+        parser.add_plugin(MultifieldPlugin(["name", "conditions"]))
             
         search_result = []
         query = parser.parse(query)
