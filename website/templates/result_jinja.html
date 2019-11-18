@@ -128,7 +128,11 @@
                 <p class="card-text small">Conditions: 
                 {% for cond in item["new_conditions"][:-1] %}
                 {% set new_cond = cond.split('|') %}
-                {{new_cond[0]}},
+                {% if query.lower() in new_cond[0].lower() %}   <!–– to test highlighting (Ian)  ––> 
+                 <font style="background-color:orange">{{new_cond[0]}}</font>
+                {% else %}
+                 <font>{{new_cond[0] }}</font>
+                {% endif %}
                 {% endfor %}
                 {% set new_cond = item["new_conditions"][-1].split('|') %}
                 {{new_cond[0]}}
@@ -159,7 +163,11 @@
             {% for condition in conditions %}
             <div class="d-flex w-100 justify-content-between">   
                 {% set items = condition.split('|') %}
-                <p>{{items[0]}}</p>
+                {% if query.lower() in items[0].lower() %}   <!–– to test highlighting (Ian) ––> 
+                 <p style="background-color:orange">{{items[0]}}</p>
+                {% else %}
+                 <p>{{items[0]}}</p>
+                {% endif %}
                 <p class="text-right font-weight-light small">data source: 
                     {% for item in items[1:-1] %}
                     <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
