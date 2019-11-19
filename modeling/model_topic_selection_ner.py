@@ -150,3 +150,21 @@ mih_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 
 mih_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_summary.csv')
 
+
+english=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_name.csv')
+summary_dict=defaultdict(lambda:'')
+english['new_name']=english['new_name'].str.replace(r"\(.*\)","")
+for row in english.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'new_name')
+    wikipage,page_used=wiki_search(name,return_type='both')
+    print("Looked for "+name+" got "+page_used)
+    try:
+        wikipage=wikipediamw.page(page_used)
+        toc=wikipage.sections
+        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+    except:
+        pass
+english_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+
+english_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_summary.csv')
+
