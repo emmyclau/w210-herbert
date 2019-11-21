@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+	<style>
+        body,html {
+            height:100%;
+        }
+        
+        #top-container {
+            height: 260px;
+            padding-top:75px;            
+            background-image: url({{ url_for('static', filename='img/banner.png') }});
+            background-size:     cover;                      
+            background-repeat:   no-repeat;
+            background-position: center center; 
+        }
+        
+        #column1 {
+            height: calc(100% - 300px);
+            position:fixed;
+            top:300px;
+            overflow: scroll;
+        }
+        #column2 {
+            height: calc(100% - 300px);
+            position:fixed;
+            top:300px;
+            right:0px;
+            overflow: scroll;}
+
+        .mr-6,
+        .mx-6 {
+          margin-right: 5rem !important;
+        }
+        
+    </style>
+    <title>Herbert - Semantic Search Engine for Herbal Medicines</title>
+  </head>
+    
+  <body>
+      
+    <nav id="myNav" class="navbar navbar-dark bg-dark fixed-top navbar-expand-sm">
+        <a class="navbar-brand" href="#">Herbert</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBarMain"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navBarMain">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="#team" class="nav-link">Team</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+      
+      
+    <section id="top-container" class="container-fluid">
+        <div class="row d-flex align-items-center">
+            <div class="col-md-4 mt-5 mb-3">
+                <div class="h4 mb-2 text-secondary text-bottom text-right text-light">Herbal Medicine Search</div>
+            </div>
+            <div class="col-md-5 mt-5 mb-3">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="herb name or medical condition"/>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </div>
+              </div>
+            </div>
+        </div>  
+    </section>
+    
+    <section id="main-container" class="container-fluid">
+        
+        <div class="small mx-5 mb-2 mt-3 align-bottom">25 Results Found</div>
+        
+        <div id="column1" class="col-md-3 mx-3">  
+            
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Ginger</a>
+                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
+            </div>
+          </div>
+
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Cinnamon</a>
+                <p class="card-text small">Cinnamon contains several antioxidants that help <b>ease digestion</b>...</p>
+                <p class="card-text small">Side effects: <b>stomach chills</b></p>
+            </div>
+          </div>
+            
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Cumin</a>
+                <p class="card-text small">Cumin seeds may help reduce indigestion and excess <b>stomach acids</b>...</p>                
+            </div>
+          </div>
+
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Ginger</a>
+                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
+            </div>
+          </div>
+            
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Ginger</a>
+                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
+            </div>
+          </div>
+            
+          <div class="card mx-2 mb-2">
+            <div class="card-body">
+                <a href="#" class="h5 card-title text-dark">Ginger</a>
+                <p class="card-text small">Studies have shown that ginger can be a effective treatment for <b>stomach upset</b>...</p>                
+            </div>
+          </div>
+        </div>
+        
+        
+    <article id="column2" class="col-md-8 mr-5 mb-5">
+            <div class="d-flex w-100 justify-content-between">
+                <div class="h1 mb-4">Ginger</div>
+                <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
+            </div>    
+
+            <div>
+            <p>Ginger is an herbal supplement, which can be used as a natural remedy in treatment of antiemetic, carminative, stimulant and also as an anti-inflammatory. It can be effective in treatment of dyspepsia, migraine headache, morning sickness, nausea (chemo induced), post-operative nausea and/or vomiting, osteoarthritis, respiratory infections, rheumatoid arthritis and for SSRI taper/discontinuation.
+            <p/>
+            Demonstrated antiemetic efficacy in pregnancy, postoperative nausea and vomiting and vertigo. It is possibly ineffective for motion sickness.
+            <p/>
+            Insufficient reliable data to rate use in chemotherapy induced nausea and vomiting, migraine headache, osteoarthritis and rheumatoid arthritis
+            <p/>
+            Ginger is available under the following different brand names: African ginger, black ginger, cochin ginger, Imber, Jamaica ginger, race ginger, rhizoma zingerberis, rhizome, sheng jiang, Shokyo, zingibain, Zingiber officinale, and Zingiberis.<p/>
+            </div>
+
+            <div class="h2 mt-5 mb-3">Health Benefits / Conditions</div>
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>digestion</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>nausea</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MeAndQi,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>cold and flu relief</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>pain reduction</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>inflammation</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>cardiovascular health</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+
+
+            <div class="h2 mt-5 mb-3">Side Effects</div>
+            <div class="d-flex w-100 justify-content-between">
+                <p>increased bleeding tendency</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>abdominal discomfort</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MeAndQi,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>cardiac arrhythmias (if overdosed)</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>central nervous system depression (if overdosed)</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>dermatitis (with topical use)</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>diarrhea</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>heartburn</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>mouth or throat irritation</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div> 
+
+            <div class="h2 mt-5 mb-3">Interactions with Medications</div>
+            <div class="d-flex w-100 justify-content-between">
+                <p>Medications that slow blood clotting (Anticoagulant / Antiplatelet drugs)</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>Phenprocoumon</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MeAndQi,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap</a>
+                </p>
+            </div>  
+
+            <div class="d-flex w-100 justify-content-between">
+                <p>Warfarin (Coumadin)</p>
+                <p class="text-right font-weight-light small">data source: 
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
+                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
+                </p>
+            </div>  
+
+
+
+            <div class="d-flex w-100 justify-content-between  mt-5 mb-3">
+                <div class="h2">Others</div>
+                <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
+            </div>    
+
+            <div>
+            <p>Ginger is an herbal supplement, which can be used as a natural remedy in treatment of antiemetic, carminative, stimulant and also as an anti-inflammatory. It can be effective in treatment of dyspepsia, migraine headache, morning sickness, nausea (chemo induced), post-operative nausea and/or vomiting, osteoarthritis, respiratory infections, rheumatoid arthritis and for SSRI taper/discontinuation.
+            <p/>
+            Demonstrated antiemetic efficacy in pregnancy, postoperative nausea and vomiting and vertigo. It is possibly ineffective for motion sickness.
+            <p/>
+            Insufficient reliable data to rate use in chemotherapy induced nausea and vomiting, migraine headache, osteoarthritis and rheumatoid arthritis
+            <p/>
+            Ginger is available under the following different brand names: African ginger, black ginger, cochin ginger, Imber, Jamaica ginger, race ginger, rhizoma zingerberis, rhizome, sheng jiang, Shokyo, zingibain, Zingiber officinale, and Zingiberis.<p/>
+            </div>
+            
+        </article>
+        
+    </section>
+
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>

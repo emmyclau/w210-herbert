@@ -11,8 +11,8 @@
         }
         
         #top-container {
-            height: 260px;
-            padding-top:75px;            
+            height: calc(25%);
+            padding-top:calc(5%);            
             background-image: url({{ url_for('static', filename='img/banner.png') }});
             background-size:     cover;                      
             background-repeat:   no-repeat;
@@ -20,16 +20,16 @@
         }
         
         #column1 {
-            height: calc(100% - 300px);
+            height: calc(100% - 30%);
             position:fixed;
-            top:300px;
+            top:calc(30%);
             overflow: scroll;
         }
         
         #column2 {
-            height: calc(100% - 300px);
+            height: calc(100% - 30%);
             position:fixed;
-            top:300px;
+            top:calc(30%);
             right:0px;
             overflow: scroll;}
 
@@ -71,21 +71,118 @@
           box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
         }
         
+        
+        
+        .btn-outline-category {
+          color: #6c757d;
+          background-color: #fff;
+          border-color: #fff;
+        }
+
+        .btn-outline-category:hover {
+          color: #000;
+          background-color: #fff;
+          border-color: #fff;
+          text-decoration:underline;
+        }
+
+        .btn-outline-category:focus, .btn-outline-category.focus {
+          /*box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);*/
+          text-decoration:underline;
+          border-color: #fff;
+        }
+
+        .btn-outline-category.disabled, .btn-outline-category:disabled {
+          color: #000;
+          text-decoration:underline;
+          border-color: #fff;
+        }
+
+        .btn-outline-category:not(:disabled):not(.disabled):active, .btn-outline-category:not(:disabled):not(.disabled).active,
+        .show > .btn-outline-category.dropdown-toggle {
+          color: #000;
+          background-color: #fff;
+          border-color: #fff;
+        }
+
+        .btn-outline-category:not(:disabled):not(.disabled):active:focus, .btn-outline-category:not(:disabled):not(.disabled).active:focus,
+        .show > .btn-outline-category.dropdown-toggle:focus {
+          /*box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);*/
+          text-decoration:underline;
+        }
+        
+        
+        
+        
+        
+        .btn_left_rail {
+          display: inline-block;
+          font-weight: 400;
+          color: #212529;
+          text-align: left;
+          vertical-align: middle;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          background-color: transparent;
+          border: 1px solid transparent;
+          padding: 0.1rem 0.1rem;
+          font-size: 1rem;
+          line-height: 1.5;
+          border-radius: 0.25rem;
+          transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        
+        
+        .btn_left_rail:hover {
+          color: #212529;
+          text-decoration: none;
+          background-color: #ddd;
+        }
+        
+        .btn_left_rail:focus, .btn_left_rail.focus {
+          outline: 0;
+          background-color: #ccc;
+          box-shadow: 0 0 0 0.05 rem rgba(0, 0, 0);
+          text-decoration: none;
+        }
+        
+
     </style>
       
+
     <script>
-        
         function searchFunction() {   
             location.href = encodeURI('/search?query=' + document.getElementById("search_input").value)
         }
         
+        function searchRefresh(herb_id) {
+            
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                
+              column2 = document.getElementById("column2");
+              column2.innerHTML = this.responseText;
+              column2.scrollTop = 0;
+            }
+          };
+          xhttp.open("GET", "/lookup?herb_id=" + herb_id, true);
+          xhttp.send();
+            
+        } 
+        
+        
     </script>
       
     <title>Herbert - Semantic Search Engine for Herbal Medicines</title>
+      
   </head>
     
   <body>
       
+    <!-- nav bar -->
     <nav id="myNav" class="navbar navbar-dark bg-dark fixed-top navbar-expand-sm">
         <a class="navbar-brand" href="/">Herbert</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBarMain"><span class="navbar-toggler-icon"></span></button>
@@ -98,122 +195,75 @@
     </nav>
       
       
+    <!-- Display search box -->
     <section id="top-container" class="container-fluid">
         <div class="row d-flex align-items-center">
-            <div class="col-md-4 mt-5 mb-3">
+            <div class="col-md-4 mt-4 mb-3">
                 <div class="h4 mb-2 text-secondary text-bottom text-right text-light">Herbal Medicine Search</div>
             </div>
-            <div class="col-md-5 mt-5 mb-3">
+            <div class="col-md-5 mt-4 mb-3">
               <div class="input-group">
-                <input type="text" id="search_input" class="form-control" placeholder="herb name or medical condition"/>
+                <input type="text" id="search_input" class="form-control" placeholder="{{query}}"/>
                 <div class="input-group-append">
                     <button type="button" id="search_button" class="btn btn-outline-tertiary" onclick="searchFunction()" >Search</button>
                 </div>
               </div>
             </div>
-        </div>  
+        </div> 
+        <div class="row d-flex align-items-center">
+            <div class="col-md-4"></div>
+            <p class="h6 px-3 text-right text-light">Search in:
+            <a class="h6 text-light px-2"  href='#'>All</a>
+            <a class="h6 text-light px-2"  href='#'>Conditions</a>
+            <a class="h6 text-light px-2"  href='#'>Interactions</a>
+            </p>
+        
+        </div>
+        
+        
     </section>
     
+      
+    <!-- search result and herb detail  -->
     <section id="main-container" class="container-fluid">
         
-        <div class="small font-weight-light mx-5 mb-2 mt-3 align-bottom">{{search_result|length}} Results Found for {{query}}</div>
+        <div class="small font-weight-light mx-5 mb-2 mt-3 align-bottom text-capitalize">{{search_result|length}} Results Found for {{query}}</div>
+        
+        
+        <!-- Display search result listing -->
         
         <div id="column1" class="col-md-3 mx-3">  
           
           {% for item in search_result %}    
-          <div class="card mx-2 mb-2">
-            <div class="card-body">
-                <a href="#" class="h5 card-title text-dark">{{ item["english_name"][0] }}</a>
-                
-                <p class="card-text small">Conditions: 
-                {% for cond in item["new_conditions"][:-1] %}
-                {% set new_cond = cond.split('|') %}
-                {% if query.lower() in new_cond[0].lower() %}   <!–– to test highlighting (Ian)  ––> 
-                 <font style="background-color:orange">{{new_cond[0]}}</font>
-                {% else %}
-                 <font>{{new_cond[0] }}</font>
-                {% endif %}
-                {% endfor %}
-                {% set new_cond = item["new_conditions"][-1].split('|') %}
-                {{new_cond[0]}}
-                </p>                
-            </div>
+          <div class="card mx-1 mb-1">
+            <a class="btn_left_rail" onclick="searchRefresh({{item['herb_id']}});">
+                <div class="card-body">
+                    <p class="h5 card-title text-dark text-capitalize">{{ item["english_name"][0] }} </p>
+                    <p class="card-text small" style="height: 2.2em; line-height: 1.1; overflow: hidden;">Conditions: 
+                    {% for cond in item["new_conditions"][:-1] %}
+                    {% set new_cond = cond.split('|') %}
+                    {% if query.lower() in new_cond[0].lower() %}   <!–– to test highlighting (Ian)  ––> 
+                    <font style="background-color:orange">{{new_cond[0]}}</font>
+                    {% else %}
+                     <font>{{new_cond[0] }}</font>
+                    {% endif %}
+                    {% endfor %}
+                    {% set new_cond = item["new_conditions"][-1].split('|') %}
+                    {{new_cond[0]}}
+                    </p>                
+                </div>
+              </a>
           </div>
           {% endfor %}
 
           
         </div>
         
-        
-    <article id="column2" class="col-md-8 mr-5 mb-5">
-            <div class="d-flex w-100 justify-content-between">
-                <div class="h1">{{english_name[0] if english_name }} </div>
-                <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
-            </div>    
+        <!-- Display herb detail -->
+        <article id="column2" class="col-md-8 mr-5 mb-5">
             
-            {% if pinyin_name|length > 1 %} 
-            <div class="medium mb-4">({{pinyin_name[0] if pinyin_name }}) </div>
-            {% endif %}
-
-            <div style="white-space: pre-line;">{{intro}}</div>
-            
-            <div class="h2 mt-5 mb-3">Health Benefits / Conditions</div>
-
-            {% if conditions is not none %}
-            {% for condition in conditions %}
-            <div class="d-flex w-100 justify-content-between">   
-                {% set items = condition.split('|') %}
-                <p>{{items[0]}}</p>
-                <p class="text-right font-weight-light small">data source: 
-                    {% for item in items[1:-1] %}
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
-                    {% endfor %}
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
-                </p>
-            </div>  
-            {% endfor %}
-            {% endif %}
-
-        
-            {% if sideeffects is not none %}
-            <div class="h2 mt-5 mb-3">Side Effects</div>
-            
-            {% for sideeffect in sideeffects %}
-            <div class="d-flex w-100 justify-content-between">
-                <p>{{sideeffect}}</p>
-                <p class="text-right font-weight-light small">data source: 
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>MedlinePlus,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>SymMap,</a>
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a>
-                </p>
-            </div>  
-            {% endfor %}
-            {% endif %}
-
-        
-            {% if interactions is not none %}
-            <div class="h2 mt-5 mb-3">Interactions with Medications</div>
-            
-            {% for interaction in interactions %}
-            <div class="d-flex w-100 justify-content-between">
-                {% set items = interaction.split('|') %}
-                <p>{{items[0]}}</p>
-                <p class="text-right font-weight-light small">data source: 
-                    {% for item in items[1:-1] %}
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
-                    {% endfor %}
-                    <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
-                </p>
-            </div>  
-            {% endfor %}
-            {% endif %}
-
-            <div class="d-flex w-100 justify-content-between  mt-5 mb-3">
-                <div class="h2">Others</div>
-                <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
-            </div>    
-
-            <div class="mb-5" style="white-space: pre-line">{{others}}</div>
+            {% import "herb_jinja.html" as herb %}
+            {{ herb.display_herb(english_name, pinyin_name, chinese_name, other_name, intro, conditions, interactions, safe, likely_safe, possibly_safe, likely_unsafe, possibly_unsafe) }}
             
         </article>
         
