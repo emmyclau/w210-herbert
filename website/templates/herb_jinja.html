@@ -1,0 +1,182 @@
+{% macro display_herb(english_name, pinyin_name, chinese_name, other_name, intro, conditions, interactions, safe, likely_safe, possibly_safe, likely_unsafe, possibly_unsafe) -%}   
+
+
+    <!-- English Name -->
+    {% if english_name[0]|length > 1 %}
+    <div class="d-flex w-100 justify-content-between">
+        <div class="h2 text-capitalize mb-1">{{english_name[0]}}</div>
+        {% if intro|length > 1 %}
+        <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
+        {% endif %}
+    </div>    
+    {% endif %}
+
+
+    <!-- Pinyin Name -->
+    {% if (pinyin_name[0]|length > 1) or (chinese_name[0]|length > 1) %} 
+        <div class="medium">
+
+        {% if (pinyin_name[0]|length > 1) and (chinese_name[0]|length < 1) %} 
+            ({{pinyin_name[0] if pinyin_name }})
+        {% endif %}
+        {% if (pinyin_name[0]|length > 1) and (chinese_name[0]|length > 1) %} 
+            {{pinyin_name[0] if pinyin_name }}
+            ({{chinese_name[0] if chinese_name }})
+        {% endif %}                        
+        {% if (pinyin_name[0]|length < 1) and (chinese_name[0]|length > 1) %} 
+            ({{chinese_name[0] if chinese_name }})
+        {% endif %}
+
+        </div>
+    {% endif %}
+
+    <!-- Introduction -->
+    <div class="medium mb-3 mt-3" style="white-space: pre-line;">{{intro}}</div>
+
+    
+    <!-- Other name -->
+    {% if other_name[0]|length > 1 %}
+    <div class="medium mt-0"><b>Other names:</b>
+    {% for s in other_name  %}
+        {% set items = s.split('|') %}
+        {% if other_name|length > loop.index %}
+            {{items[0]}}, 
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <!-- Conditions -->
+    {% if conditions[0]|length > 1 %}
+    <div class="h4 mt-4 mb-2">Health Benefits / Conditions</div>
+
+    {% for condition in conditions %}
+    <div class="d-flex w-100 justify-content-between">   
+        {% set items = condition.split('|') %}
+        <p class="mt-1 mb-1">{{items[0]}}</p>
+        <p class="mt-1 mb-1 text-right font-weight-light small">data source: 
+            {% for item in items[1:-1] %}
+            <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
+            {% endfor %}
+            <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
+        </p>
+    </div>  
+    {% endfor %}
+    {% endif %}
+
+    <!-- Interactions -->
+    {% if interactions|length > 10 %}
+    <div class="h4 mt-4 mb-2">Interactions with Medications</div>
+
+    {% for interaction in interactions %}
+    <div class="d-flex w-100 justify-content-between">
+        {% set items = interaction.split('|') %}
+        <p class="mt-1 mb-1">{{items[0]}}</p>
+        <p class="mt-1 mb-1 text-right font-weight-light small">data source: 
+            {% for item in items[1:-1] %}
+            <a class="text-dark" style="text-decoration: underline;" href='#'>{{item}},</a>
+            {% endfor %}
+            <a class="text-dark" style="text-decoration: underline;" href='#'>{{items[-1]}}</a>
+        </p>
+    </div>  
+    {% endfor %}
+    {% endif %}
+
+    <!-- Safety -->
+    {% if (safe[0]|length > 1) or (likely_safe[0]|length > 1) or (possibly_safe[0]|length > 1) or (likely_unsafe[0]|length > 1) or (possibly_unsafe[0]|length > 1)  %}
+    <div class="d-flex w-100 justify-content-between">
+        <p class="h4 mt-4 mb-2">Safety Concerns</p>
+        <p class="mt-4 mb-2 text-right font-weight-light small">data source: 
+            <a class="text-dark" style="text-decoration: underline;" href='#'>natural_medicine</a>
+        </p>
+    </div>  
+
+    
+    <!-- safe -->
+    {% if safe[0]|length > 1 %}
+    <div><b>Safe:</b>
+    {% for s in safe  %}
+        {% set items = s.split('|') %}
+        {% if safe|length > loop.index %}
+            {{items[0]}},
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+        
+    <!-- likely safe -->
+    {% if likely_safe[0]|length > 1 %}
+    <div><b>Likely safe:</b>
+    {% for s in likely_safe  %}
+        {% set items = s.split('|') %}
+        {% if likely_safe|length > loop.index %}
+            {{items[0]}},
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- possibly safe -->
+    {% if possibly_safe[0]|length > 1 %}
+    <div><b>Possibly safe:</b>
+    {% for s in possibly_safe  %}
+        {% set items = s.split('|') %}
+        {% if possibly_safe|length > loop.index %}
+            {{items[0]}},
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <!-- likely unsafe -->
+    {% if likely_unsafe[0]|length > 1 %}
+    <div><b>Likely unsafe:</b>
+    {% for s in likely_unsafe  %}
+        {% set items = s.split('|') %}
+        {% if likely_unsafe|length > loop.index %}
+            {{items[0]}},
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <!-- possibly unsafe -->
+    {% if possibly_unsafe[0]|length > 1 %}
+    <div><b>Possibly unsafe:</b>
+    {% for s in possibly_unsafe  %}
+        {% set items = s.split('|') %}
+        {% if possibly_unsafe|length > loop.index %}
+            {{items[0]}},
+        {% else %}
+            {{items[0]}}
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% endif %}
+
+    {% endif %}
+    
+
+    <!--
+    <div class="d-flex w-100 justify-content-between  mt-5 mb-3">
+        <div class="h2">Others</div>
+        <p class="text-right font-weight-light small">data source: <a class="text-dark" style="text-decoration: underline;" href='#'>Wikipedia</a></p>
+    </div>    
+    -->
+    <div class="mb-5" style="white-space: pre-line">{{others}}</div>
+    
+
+{%- endmacro %}

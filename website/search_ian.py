@@ -86,24 +86,31 @@ class SearchEngine:
         parser = QueryParser(None, self.schema,termclass=terms.Variations,group=OrGroup)  #Ian Added Variations for searching on variations of the word, adeed OR group so it's either
         parser.add_plugin(MultifieldPlugin(["name", "other_name", "conditions"]))
 
+        print ("query pre-parse",query)
+
         
         #parser = MultifieldParser(["name", "other_name", "conditions"], self.schema)
             
         search_result = []
-        query = parser.parse(query)
+        qp = parser.parse(query)
+
+        print ("query POST",query)
+
         with self.ix.searcher() as s:
-            results = s.search(query, limit=100)
+            results = s.search(qp, limit=100,terms=True)
             print(len(results))
 
             for r in results:
                 #print(r, r.score)
                 search_result.append(self.ds.get_herb(int(r.get('herb_id'))))
+                #print("GET HERBID:",r.get('herb_id'))
+                #print(self.ds.get_herb(int(r.get('herb_id'))))
+                cond = (self.ds.herb_dict[int(r.get('herb_id'))].get('conditions'))
+                #print(cond)
+                print("RESULT TERMS:",r.matched_terms())
+                if str(qp) in cond:
+                    print ("YEP COND in QUERY",qp)
 
             
         return search_result
-
-
-
-
-
 
