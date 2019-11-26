@@ -1,0 +1,642 @@
+,new_name
+0,activated charcoal
+1,alfalfa
+2,american ginseng
+3,arnica
+4,ashwagandha
+5,bacillus coagulans
+6,bee pollen
+7,belladonna
+8,berberine
+9,beta-carotene
+10,bifidobacteria
+11,biotin
+12,bitter melon
+13,black psyllium
+14,black tea
+15,blessed thistle
+16,blond psyllium
+17,blueberry
+18,blue-green algae
+19,boron
+20,calendula
+21,cannabidiol (cbd)
+22,capsicum
+23,cascara sagrada
+24,chondroitin sulfate
+25,clove
+26,coconut water
+27,cod liver oil
+28,creatine
+29,deer velvet
+30,devil's claw
+31,dhea
+32,dong quai
+33,eucalyptus
+34,folic acid
+35,fucus vesiculosus
+36,gelatin
+37,glucosamine hydrochloride
+38,glucosamine sulfate
+39,goji
+40,grape
+41,grapefruit
+42,green coffee
+43,guarana
+44,gymnema
+45,hibiscus
+46,honey
+47,hops
+48,horny goat weed
+49,horsetail
+50,iodine
+51,lactobacillus
+52,l-arginine
+53,lipase
+54,l-tryptophan
+55,lutein
+56,lycopene
+57,maca
+58,manganese
+59,mangosteen
+60,maritime pine
+61,methylsulfonylmethane
+62,niacin
+63,niacinamide
+64,oats
+65,olive
+66,omega-6 fatty acids
+67,oregano
+68,oscillococcinum
+69,palm oil
+70,pantothenic acid
+71,papaya
+72,pau d'arco
+73,peanut oil
+74,pennyroyal
+75,phosphate salts
+76,propolis
+77,raspberry ketone
+78,reishi mushroom
+79,resveratrol
+80,riboflavin
+81,roman chamomile
+82,rose hip
+83,saccharomyces boulardii
+84,senna
+85,shark cartilage
+86,siberian ginseng
+87,slippery elm
+88,spearmint
+89,stevia
+90,thiamine
+91,vitamin b6
+92,vitamin k
+93,whey protein
+94,wild yam
+95,willow bark
+96,yerba mate
+97,zinc
+98,5-htp
+99,silvery wormwood leaf
+100,croton fruit
+101,morinda root
+102,star anise
+103,hyacinth bean
+104,ginkgo nut
+105,lily bulb
+106,cogongrass rhizome
+107,snow ear mushroom
+108,white peony root
+109,atractylodes rhizome
+110,swallow-wort root
+111,dittany root bark
+112,angelica root
+113,woad root
+114,crow-dipper rhizome
+115,glehnia root
+116,long pepper
+117,castor bean
+118,areca nut
+119,borneol
+120,wild mint
+121,biota seed
+122,shiral leaf
+123,tsaoko fruit
+124,bupleurum root
+125,tangerine peel
+126,agarwood
+127,red peony root
+128,adzuki bean
+129,fritillary bulb
+130,szechuan lovage root
+131,scallion
+132,rhubarb
+133,japanese thistle
+134,woad leaf
+135,jujube date
+136,bitter orange flower
+137,fermented soybean
+138,red sage root
+139,lophatherum herb
+140,codonopsis root
+141,sword bean
+142,unprepared rehmannia
+143,clove
+144,cordyceps
+145,wax gourd
+146,pubescent angelica root
+147,alexandrian senna leaf
+148,saposhnikovia root
+149,stephania root
+150,chinese nutmeg yew
+151,honeycomb
+152,buddha's hand
+153,poria-cocos mushroom
+154,palmleaf raspberry
+155,liquorice
+156,dried ginger
+157,lesser galangal rhizome
+158,kudzu root
+159,goji berry
+160,gambir stem and thorn
+161,snake gourd
+162,cinnamon twig
+163,clam shell
+164,sargassum
+165,fleeceflower root
+166,lotus leaf
+167, black sesame seed
+168,safflower
+169,rhodiola root
+170,houpu magnolia flower
+171,houpu magnolia bark
+172,mistletoe
+173,black pepper
+174,fenugreek seed
+175,coriander
+176,sichuan pepper
+177,talc
+178,pagoda tree flower
+179,brown mustard seed
+180,king solomon's seal root
+181,goldthread rhizome
+182,milkvetch root
+183,baikal skullcap root
+184,hemp seed
+185,korean mint
+186,turmeric
+187,platycodon root
+188,gold coin herb
+189,perennial buckwheat root
+190,honeysuckle flower
+191,cherokee rose fruit
+192,garlic chive seed
+193,bitter orange seed
+194,chrysanthemum flower
+195,chicory
+196,cassia seed
+197,kuding tea
+198,sophora root
+199,coltsfoot flower
+200,radish seed
+201,lychee seed
+202,lotus receptacle
+203,forsythia fruit
+204,lotus stamen
+205,lotus seed
+206,lotus plumule
+207,shiny-leaf prickly-ash
+208,lingzhi mushroom
+209,longan
+210,maral root
+211,common reed rhizome
+212,aloe vera
+213,monk fruit
+214,verbena leaf
+215,purslane
+216,ephedra
+217,ephedra root
+218,dwarf lilyturf root
+219,malt
+220,rose flower
+221,roselle flower bud
+222,plum flowers
+223,jasmine flower
+224,mudan peony bark
+225,flowering quince
+226,oyster shell
+227,costus root
+228,pumpkin seeds
+229,greater burdock fruit
+230,achyranthes root
+231,glossy privet fruit
+232,lotus root
+233,malva nut
+234,eupatorium herb
+235,loquat leave
+236,pu'er tea
+237,dandelion
+238,foxnut seed
+239,notopterygium root
+240,chinese white olive
+241,sweet wormwood herb
+242,ginseng
+243,ginseng leaf
+244,nutmeg
+245,cinnamon bark
+246,frankincense
+247,tienchi ginseng
+248,mulberry bark
+249,mulberry fruit
+250,mulberry leaf
+251,sea buckthorn fruit
+252,amomum fruit
+253,yam
+254,hawthorn berry
+255,cornelian cherry
+256,medicated leaven
+257,fresh ginger
+258,bugbane rhizome
+259,gypsum
+260,dendrobium
+261,pomegranate peel
+262,prepared rehmannia
+263,milk thistle seed
+264,sponge gourd
+265,jujube seed
+266,peach kernel
+267,gastrodia rhizome
+268,smilax glabra root
+269,fameflower root
+270,cuscuta seed
+271,vaccaria seeds
+272,clematis root
+273,chinese plum
+274,schisandra berry
+275,lindera root
+276,saffron
+277,heal-all spike
+278,coco-grass rhizome
+279,lemongrass
+280,vietnamese balm
+281,citron
+282,fennel seed
+283,field thistle
+284,stachyurus stem pith
+285,long-stamen onion bulb
+286,biond’s magnolia flower
+287,apricot seed
+288,ningpo figwort root
+289,snow lotus
+290,stinging nettle leaf
+291,flax seed
+292,marshmallow root
+293,motherwort herb
+294, job's tears
+295,sharp-leaf galangal fruit
+296,virgate wormwood
+297,ginkgo leaf
+298,emblic
+299,turmeric tuber
+300,bush cherry pit
+301,corn silk
+302,houttuynia
+303,angular solomon's seal root
+304,water plantain
+305,camphor
+306,pearl
+307,prepared aconite
+308,japanese raisin tree seed
+309,anemarrhena rhizome
+310,cape jasmine fruit
+311,polyporus
+312,perilla leaf
+313,perilla seed
+314,japanese ardisia herb
+315,benzoin
+316,dysosmae verspiellis rhixoma et radix
+317,smilax chi
+318,rhizome of giant typhonium
+319,semen cleomis
+320,all - grass of spreading hedyotis
+321,bletilla striata (thunb.ex a.murray)rchb.f.
+322,root of japanese ampelopsis 
+323,herba solani lyrati
+324,all - grass of decumbent bugle
+325,cynchum root
+326,chelidonii herba
+327,root of chinese pulsatilla
+328,radix stephaniae cepharanthae.
+329,root of japanese stemo
+330,seed of chinese arborvitae
+331,all - grass of dahurian patrinia
+332,mylabris
+333,chinese lobelia herb
+334,all - grass of barbed skullcap
+335,chinese cinquefoil
+336,siphonostegiae herba
+337,root of coastal glehnia
+338,schisandrae chinensis fructus
+339,litseae fructus
+340,all-grass of common knotgrass
+341,flower of hyacinth dolichos
+342,bombyx mori l.
+343,fruit of siberian cockleblur
+344,rhizome of swordlike atractylodes
+345,boschniakia rossica herba
+346,kusnezoff monkshood root
+347,kusnezoff monkshood leaf
+348,leafy twigs of oriental arborvitae
+349,cicada slough
+350,root of antifebrile dichroa
+351,all-grass of rippleseed plantain
+352,motherwort fruit
+353,"glorybower leaf, clerodendron leaf"
+354,broussonetiae fructus
+355,cortex hibisci
+356,szechwan chiberry fruit
+357,armand clematis stem
+358,root of medicil cyathula
+359,iridis tectori rhizoma
+360,root of common monkshood
+361,"chuanxiong rhizome, szechuan lovage root"
+362,ningpo yam rhizome 
+363,all-grass of common androgrphis
+364,all - grass of stringy stonecrop
+365,"ailanthus bark, tree of heaven bark"
+366,hydnocarpi anthelminticae semen
+367,areca catechu l.
+368,garlic
+369,stem of sargentgloryvine
+370,gleditsiae fructus
+371,root of ligulilobe sage
+372,root pilose asiabell
+373,achyranthis asperae herba
+374,pith of common rush
+375,all - grass of japanese st. johnswort
+376,difengpi bark
+377,fruit of belvedere
+378,root - bark of chinese wolfberry
+379,all - grass of humifuse euphorbia
+380,root of garden burnet
+381,stem of taiwan erycibe
+382,chinese waxgourd peel
+383,benincasae semen
+384,cluster mallow fruit
+385,round cardamon fruit
+386,eucommia bark
+387,eucommiae folium
+388,clinopodium herb
+389,zedoray rhizome
+390,small centipeda herb
+391,"cutch, black catechu"
+392,all-grass of discolor cinquefoil
+393,dioscoreae hypoglaucae rhizoma
+394,all - grass of chinese brake
+395,all-grass of tubercultae speranskia
+396,ailanthi altissimae fructus
+397,all-grass of common ducksmeat
+398,common monkshood daughter root
+399,rdostachys root
+400,root of gansui
+401,ligustici rhizoma et radix
+402,flower bud of lobed kudzuvine
+403,stem of leatherleaf mahonia
+404,folium ilicis cornutae
+405,pipewort flower
+406,rhizome of heartleaf dryria
+407,muskmelon base
+408,phellodendri amurensis cortex
+409,herbahypericiperforati
+410,root of chinese angelica
+411,pogostemon cablin (blanco) benth.
+412,fruit of axillary choerospondias
+413,twig of winged euonymus
+414,all-grass of spanishneedles
+415,stem of kadsura pepper
+416,spore of japanese climbing fern
+417,bark of oriental variegated coralbean
+418,medicine termilia fruit
+419,english walnut seed
+420,common carpesium fruit
+421,black bean
+422,kadsurae coccineae radix et caulis
+423,black sesame
+424,red ginseng
+425,hedysari radix
+426,macacae calcalus gasteris
+427,picrorhizae rhizoma
+428,stem or leaf of fung waxplant
+429,rhizome of gaint knotweed
+430,semino-dermis arachidis 
+431,physochlaie radix
+432,pummelo peel
+433,pod of japanese pagodatree
+434,phellodendron bark
+435,rhizome of airpotato yam
+436,canton love-pea vine
+437,cockscomb flower 
+438,paederiae scandentis herba
+439,suberect spatholobus stem
+440,asiatic pennywort herb
+441,seed of garden balsam
+442,puncturevine caltrop fruit
+443,odoriferous rosewood
+444,gynostemmae pentaphylli herba
+445,mustard seed
+446,all - grass of japanese inula
+447,tinosporae radix
+448,flower of chinese globeflower
+449,calendula officilis
+450,calyx seu fructus physalis
+451,peking euphorbia root
+452,all-grass of fineleaf schizonepeta
+453,schizonepetae spica
+454,sedum aizoon l.
+455,citri exocarpium rubrum
+456,citri fructus retinervus
+457,tangerine leaf
+458,aal-grass of tamariskoid spikemoss
+459,root of lightyellow sophora
+460,all - grass of bunge corydalis
+461,meliae cortex
+462,meliae azedarach fructus
+463,bitter apricot seed
+464,all - grass of common heron's bill
+465,wikstroemiae indicae rasix
+466,root of common htreewingnut
+467,thunder ball
+468,glechomae herba
+469,radde anemone rhizome
+470,indigoplant leaf
+471,flower of common trumpetcreeper
+472,lysimachiae foenigraeci herba
+473,gentiae radix et rhozima
+474,solanum nigrum linn.
+475,aauropi folium
+476,all-grass chinese pyrola
+477,fruit of beautiful sweetgum
+478,apocyniveneti folium
+479,stem of chinese starjasmine
+480,mung bean
+481,puff-ball
+482,dutohmanspipe fruit
+483,root and rhizome of manyleaf meadowrue
+484,dahurian rhododendron leaf
+485,shrub chastetree fruit
+486,lunulatae herba
+487,catclaw buttercup root
+488,myrrh
+489,actinidia chinensis planch
+490,flower of pale butterflybush
+491,dioscoreae septemlo bae rhizoma
+492,all-grass of yerbadetajo
+493,hempleaf negundo chastetree leaf
+494,viticis canbifoliae fructus
+495,momordicae semen
+496,indian trumpetflower seed
+497,flower of common bombax
+498,"akebia, clematis stem"
+499,common scouring rush herb
+500,et radix patriniae rhizoma
+501,fructus carotae
+502,fourleaf ladybell root
+503,celastri orbiculati fructus
+504,schisandrae sphentherae fructus
+505,yellow azalea flower
+506,millettiae speciosae radix
+507,cow-bezoar
+508,glutinous rice root
+509,fruit of glossy privet
+510,ussuri fritillary bulb
+511,pollen of longbract cattail
+512,all-grass of shepherdspurse
+513,root of philippine flemingia
+514,caper euphorbia seed
+515,rhizome of obscured homalome
+516,flower of globeamaranth
+517,pharbitis seed
+518,root of grand hogfennel
+519,root of tali madder
+520,root of garden eggplant
+521,root of largeleaf gentian
+522,bark of largeleaf chinese ash
+523,tural indigo
+524,caulis sinomenii
+525,green tangerine peel
+526,celosiae semen
+527,all - grass of mile swertia
+528,chingma abutilon seed
+529,all-grass of lilac pink
+530,rhizome of bistort
+531,ginseng
+532,ginseng leaf
+533,desertliving cistanche
+534,hedge prinsepia nut
+535,chinese lizardtail rhizome or herb
+536,anisodus acutangulus c. y. wu et c .chen ex c. che
+537,common burreed tuber
+538,notoginseng flos
+539,chinese taxillus herb
+540,mulberry twig
+541,flatstem milkvetch seed
+542,appendiculate cremastra pseudobulb or common pleione pseudobulb
+543,vietmese sophora root
+544,galanga resurrectionlily rhizome
+545,crataegi folium
+546,pokeberry root
+547,common cnidium fruit
+548,blackberrylily rhizome
+549,common clubmoss herb
+550,mahoniae eadix
+551,leaf of leatherleaf mahonia
+552,grassleaf sweetflag rhizome
+553,salviae chinensis herba
+554,selaginella doederleinii hieron
+555,pyrrosiae folium
+556,fruit of rangooncreeper
+557,calyx and receptacle of a persimmon
+558,gphalii affinis herba
+559,prince's-feather fruit
+560,purpleflower holly leaf
+561,"knotty pine wood, pine nodular branch"
+562,semen pini koraiensis
+563,storax
+564,buckeye seed
+565,heterophylly falsestarwort root
+566,sandalwood
+567,cochinchinese asparagus root
+568,"trichosanthes root, skegourd root"
+569,muskroot-like semiaquilegia root
+570,jackinthepulpit tuber
+571,saussureae involucratae herba
+572,dutchmanspipe vine
+573,henbane seed
+574,chinese schinzostachyum tabasheer
+575,muskmelon seed
+576,root and rhizome of smilax
+577,herba clematidis aethusaefoliae
+578,"lepidium seed, descurainia seed"
+579,puth of ricepaperplant
+580,paniculate bolbostemma
+581,pseudolaricis cortex
+582,arc shell
+583,cotyledon fimbriata turcz.
+584,chinese cinquefoil
+585,cayratiae japonicae herba
+586,sapindi mukorossi semen
+587,sapindi mukorossiperic arpium
+588,medicil evodia fruit
+589,semen firmiae
+590,chinese gall
+591,chinese tamarisk twig
+592,american ginseng
+593,siegesbeckiae herba
+594,all-grass manchurian wildginger
+595,decumbent corydalis rhizome
+596,all - grss of hairyvein agrimonia
+597,rhizome of common curculigo
+598,veronicae peregrie herba
+599,abrus precatorius l.
+600,cortex periplocae radicis
+601,paniculate swallowwort root
+602,himalayan teasel root
+603,hemerocallis radix
+604,figwort root
+605,inula flower
+606,rhizoma seu herba aristolochiae mollissimae
+607,java brucea fruit
+608,all-grass of common dayflower
+609,corydalis tuber
+610,datura flower
+611,wild chrysanthemum flower
+612,solidaginis herba
+613,sinkiang fritillary bulb
+614,alpiniae oxyphyliae fructus
+615,starwort root
+616,epimrdii herba
+617,poppy capsule
+618,globethistle root
+619,akebia fruit
+620,flower bud of lilac daphne
+621,coriandri sativi herba
+622,chinese rose flower
+623,coriolus versicolor
+624,gleditsiae sinensis semen
+625,spine of chinese honeylocust
+626,hirsute shiny bugleweed herb
+627,euphorbiae helioscopiae herba
+628,bulb of thunberg fritillary
+629,fruit of seville orange
+630,immature fruit of seville orange
+631,all-grass of glabrous sarcandra
+632,chinese honeylocust abnormal fruit
+633,pacis japonici rhizoma
+634,bamboo juice
+635,ramine root 
+636,arnebia root gromwell root
+637,tokyo violet herb
+638,peucedanidecursivi radix
+639,perilla frutescens
+640,root of tatarian aster

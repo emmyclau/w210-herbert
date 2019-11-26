@@ -27,14 +27,27 @@ import json
 import os
 import clausiepy as clausie
 from itertools import chain
+#import textacy has to be in separate environment
+import phrasemachine
+import time
 
+print("loading word vecs...")
 wv_from_bin = KeyedVectors.load_word2vec_format("wikipedia-pubmed-and-PMC-w2v.bin", binary=True)
+print('loading spacy')
 nlp = spacy.load("scilg")
 merge_nps = nlp.create_pipe("merge_noun_chunks")
 nlp.add_pipe(merge_nps)
 
 verb_clause_pattern = r'<VERB>*<ADV>*<PART>*<VERB>+<PART>*'
 
+def ascii_only(string):
+    return re.sub(r'[^\x00-\x7f]',r' ', string).strip()
+    #return ' '.join(char for char in string if ord(char) < 128)
+    #return string.encode("ascii", errors="ignore").decode()
+
+def extract_verbs(text,pattern=verb_clause_pattern):
+    v_phrase=textacy.extract.pos_regex_matches
+    return list(v_phrase)
 
 def get_toc(html,name_find=False,name_pattern="(?<=>)[^<]*"):
     soup=bs(html)
@@ -471,6 +484,7 @@ def extract_clausieSVO(text):
         if clause['type']=='SVO':
             svo.append(clause)
     return svo
+
 
 #https://github.com/mmxgn/spacy-clausie
 def extract_clausieProp(text,clause_type=None):

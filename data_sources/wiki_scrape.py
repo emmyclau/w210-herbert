@@ -174,9 +174,14 @@ df['nlmANDwiki']=  df.index.map(lambda x: x in meds)
 df.to_excel('herb_wiki.xlsx')
 
 with open('wiki_herbs.json', 'w') as fp:
-    json.dump(herb_dict, fp)        
+    json.dump(herb_dict, fp)    
+
+table_cols = [[] for i in range(9)]
+res=requests.get(=https://en.wikipedia.org/wiki/List_of_kampo_herbs)  #kampo   
     
 table_cols = [[] for i in range(3)]
+
+
 fifty_fundamental=res = requests.get("https://en.wikipedia.org/wiki/Chinese_herbology")
 soup = bs(res.text, "html.parser")
 
@@ -341,6 +346,7 @@ melted_df.to_excel('block_text.xlsx')'''
 def wiki_search(search_term,filter_pattern=False,nan_pattern='NAN',return_type='page_only'):
           valid_wiki=True
           page_used='No page found'
+          wikipage=None
           #if search term is NAN then just pass
           if (nan_pattern) and (search_term==nan_pattern):
                   valid_wiki=False 

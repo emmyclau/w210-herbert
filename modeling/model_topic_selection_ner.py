@@ -6,9 +6,72 @@ Created on Sat Nov  2 05:22:44 2019
 @author: gurdit.chahal
 """
 
-exec(open('extraction_utils.py').read())
+exec(open('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/modeling/extraction_utils.py').read())
+
+from pyMeSHSim.metamapWrap.MetamapInterface import MetaMap
+from pyMeSHSim.Sim.similarity import metamapFilter
+mm_path='/Users/gurdit.chahal/public_mm/bin/metamap18'
+mm_filter = metamapFilter(path=mm_path)
+sem_types=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/SemanticTypes_2018.txt',sep='|',header=None)
+sem_types.columns=['Abrev','Ref','Mapping']
+#concepts = filter.runMetaMap(semantic_types=filter.semanticTypes 
+#results = filter.discardAncestor(concepts=concepts)
+metamap = MetaMap(path=mm_path)
 
 medline=pd.read_excel('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_attribs.xls')
+
+#mesh extractions
+columns=['background','know','learned','safety']
+extracted_dict=defaultdict(lambda:{})
+for col in columns:
+    medline[col+'_extract']=medline[col].apply(lambda x: ascii_only(x))
+    for row in medline.itertuples(index=True, name='Pandas'):
+        name=getattr(row,'herb')
+        extracted_dict[name].update({col:''})
+        text_fromcol=(getattr(row,col+'_extract'))
+        concepts= metamap.runMetaMap(semantic_types=metamap.semanticTypes , conjunction=False, term_processing=False, text=text_fromcol) 
+        for con in concepts:
+            #if ast.literal_eval(con['score'])>9:
+                #herb-->column-->concepts in column
+                # , sep tuple of concept attributes, | sep for concepts
+            extracted_dict[name][col]+=','.join([con['preferred_name'],con['semtypes'],con['score'],con['cui']])+'|'
+    print(name + ' concepts extracted for '+col)       
+
+med_herbs=list(medline.herb)
+
+accepted=['[bpoc]','[dsyn]','[fndg]','[sosy]',['mobd'],'[virs]','[hops]',['inpo']]
+
+medline['treats']='No Info'
+medline['harm']='No Info'
+for row in medline.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'herb')
+    sympts=extracted_dict[name]['background'].split('|')
+    accepted_sympts=[]
+    for symp in sympts:
+        triple=symp.split(',')
+        print(triple)
+        if len(triple)==4 and (triple[1] in accepted):
+            accepted_sympts.append(triple[0]+'*'+triple[3])
+    medline.set_value(row.Index,'treats','|'.join(accepted_sympts))
+   
+    harms=extracted_dict[name]['safety'].split('|')
+    accepted_harms=[]
+    for harm in harms:
+        triple=harm.split(',')
+        print(triple)
+        if len(triple)==4 and (triple[1] in accepted):
+            accepted_harms.append(triple[0]+'*'+triple[3])
+    medline.set_value(row.Index,'harm','|'.join(accepted_harms))
+
+medline['CommonNames']=medline['common_names'].apply(lambda x: ascii_only(str(x).split(':')[-1]))
+
+medline['CommonNames']=medline['CommonNames'].apply(lambda s: '|'.join(s.split(',')) ) 
+
+#learned --> SVO
+
+medline=medline[['herb','CommonNames','treats','harm']]
+medline.columns=['Herb','CommonNames','Treats','Harms']
+medline.to_csv('medline_herb_symptoms.csv')
 
 medline['safety_relations']=medline['safety'].apply(lambda doc: [subtree_matcher(sent,find_rel=True) for sent in nlp(doc).sents])
 
@@ -80,6 +143,57 @@ ff_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 ff_sum.columns=['Summary']
 ff_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/ff_summary.csv')
 
+ff_symp=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/fifty_fundamental_extract.csv')
+ff_symp=ff_symp[['Unnamed: 0','Text']]
+ff_symp.columns=['HerbTopicPair','Text']
+ff_symp['Text']=ff_symp['Text'].apply(lambda x: ascii_only(x))
+extracted_dict=defaultdict(lambda:{})
+
+for row in ff_symp.itertuples(index=True, name='Pandas'):
+        name=getattr(row,'HerbTopicPair')
+        extracted_dict[name].update({'Text':''})
+        text_fromcol=(getattr(row,'Text'))
+        '''text_fromcol=text_fromcol.split()
+        texty=[]
+        for text in text_fromcol:
+            if text.startswith('anti'):
+                text=text.replace('anti','anti ')
+                if text.endswith('al'):
+                    text.replace('al','a')
+            elif text.startswith('anti-'):
+                text=text.replace('anti-','anti- ')
+            elif text.endswith('cant'):
+                text=text.replace('cant','ify')
+            texty.append(text)
+        text_fromcol=' '.join(texty)'''
+        concepts= metamap.runMetaMap(semantic_types=metamap.semanticTypes , conjunction=False, term_processing=False, text=text_fromcol) 
+        for con in concepts:
+            #if ast.literal_eval(con['score'])>9:
+                #herb-->column-->concepts in column
+                # , sep tuple of concept attributes, | sep for concepts
+            extracted_dict[name]['Text']+=','.join([con['preferred_name'],con['semtypes'],con['score'],con['cui']])+'|'
+            print(name + ' concepts extracted for '+name) 
+
+ff_symp['Medical']='No Info'
+
+for row in ff_symp.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'HerbTopicPair')
+    sympts=extracted_dict[name]['Text'].split('|')
+    accepted_sympts=[]
+    for symp in sympts:
+        triple=symp.split(',')
+        print(triple)
+        if len(triple)==4:
+            accepted_sympts.append(triple[0]+'*'+triple[3])
+    ff_symp.set_value(row.Index,'Medical','|'.join(accepted_sympts))
+
+danger_words=np.asarray(['adverse','interact','warn','effect','side effect','react','toxic','regulate','death','poison','allergy','risk','overdose','unsafe','safe'])
+
+ff_symp['IsHarm']= ff_symp['HerbTopicPair'].apply(lambda toc_list:(match_subset(lower_all(ast.literal_eval(toc_list)[1].split()),danger_words)))   
+
+ff_symp['Herb']=ff_symp['HerbTopicPair'].apply(lambda pair: ast.literal_eval(pair)[0]) 
+ff_symp.to_csv('FiftySymptoms.csv')
+
 mq=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/meAndQi.csv')
 
 summary_dict=defaultdict(lambda:'')
@@ -119,6 +233,8 @@ sym_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sour
 
 medline_nat=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_natmedicines_1.csv')
 
+
+
 summary_dict=defaultdict(lambda:'')
 for row in medline_nat.itertuples(index=True, name='Pandas'):
     name=getattr(row,'herb')
@@ -150,21 +266,125 @@ mih_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 
 mih_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_summary.csv')
 
+top_words= ['poison',
+ 'react',
+ 'unsafe',
+ 'adverse',
+ 'safe',
+ 'regulate',
+ 'allergy',
+ 'interact',
+ 'medicine',
+ 'warn',
+ 'death',
+ 'side effect',
+ 'risk',
+ 'toxic',
+ 'overdose',
+ 'effect',
+ 'medic',
+ 'use',
+ 'application',
+ 'poison',
+ 'health',
+ 'pharm',
+ 'treat',
+ 'mental',
+ 'psych',
+ 'nutrition',
+ 'benefi',
+ 'diet']
 
 english=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_name.csv')
 summary_dict=defaultdict(lambda:'')
+english_dict=defaultdict(lambda:'')
+content_dict=defaultdict(lambda:'')
 english['new_name']=english['new_name'].str.replace(r"\(.*\)","")
 for row in english.itertuples(index=True, name='Pandas'):
     name=getattr(row,'new_name')
     wikipage,page_used=wiki_search(name,return_type='both')
-    print("Looked for "+name+" got "+page_used)
+    #print("Looked for "+name+" got "+page_used)
     try:
+       
+        if (bool(wikipage) == False):
+            next_best=name.split(' of ')
+            if len(next_best)>1:
+               next_best.reverse()
+               second_best=' '.join(next_best)
+               wikipage,page_used=wiki_search(second_best,return_type='both')
+              # wikipage=wikipediamw.page(page_used)
+               if (bool(wikipage) == False):
+                   next_try=next_best[0]
+                   wikipage,page_used=wiki_search(next_try,return_type='both')
+                   #wikipage=wikipediamw.page(page_used)
+        
         wikipage=wikipediamw.page(page_used)
-        toc=wikipage.sections
+        toc=get_toc_mw(wikipage)
+        for section in toc:
+                toc_list=match_subset(lower_all(list(section)),top_words)
+                if toc_list[0]=='NO_MATCH':
+                    continue
+                print(name,section[0])
+                content_dict[name,section[0]]+=wiki_topic_text(wikipage,section)+' \n '
+        english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc}
+        print('attempted entry for '+wikipage.title+' alias for '+name )
         summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
-    except:
+    except requests.exceptions.ReadTimeout:
+        print('timout!')
+        time.sleep(5)
+        try:
+            
+            if (bool(wikipage) == False):
+                next_best=name.split(' of ')
+                if len(next_best)>1:
+                   next_best.reverse()
+                   second_best=' '.join(next_best)
+                   wikipage,page_used=wiki_search(second_best,return_type='both')
+                  # wikipage=wikipediamw.page(page_used)
+                   if (bool(wikipage) == False):
+                       next_try=next_best[0]
+                       wikipage,page_used=wiki_search(next_try,return_type='both')
+                       #wikipage=wikipediamw.page(page_used)
+            
+            wikipage=wikipediamw.page(page_used)
+            toc=get_toc_mw(wikipage)
+            for section in toc:
+                toc_list=match_subset(lower_all(list(section)),top_words)
+                if toc_list[0]=='NO_MATCH':
+                    continue
+                print(name,section[0])
+                content_dict[name,section[0]]+=wiki_topic_text(wikipage,section)+' \n '
+            english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc}
+            summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+            print('attempted entry for '+wikipage.title+' alias for '+name )
+        
+        except:
+            print('passed on '+name)
         pass
-english_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
+    except:
+        print('passed on '+name)
+        pass
+     
 
+extracted_wiki=pd.DataFrame.from_dict(content_dict,orient='index')
+extracted_wiki.columns=['Text']
+extracted_wiki['Text']=extracted_wiki['Text'].apply(lambda x: ascii_only(x))
+extracted_wiki['UMLS']='No Info'
+for row in extracted_wiki.itertuples(index=True, name='Pandas'):
+        text_fromcol=getattr(row,'Text')
+        concepts= metamap.runMetaMap(semantic_types=metamap.semanticTypes , conjunction=False, term_processing=False, text=text_fromcol) 
+        joined=''
+        for con in concepts:
+            
+                #herb-->column-->concepts in column
+                # , sep tuple of concept attributes, | sep for concepts
+            joined+=','.join([con['preferred_name'],con['semtypes'],con['score'],con['cui']])+'|'
+            extracted_wiki.set_value(row.Index,'UMLS',joined)
+        print(' concepts extracted for '+str(row.Index))  
+
+extracted_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/extracted_wiki.csv')
+english_wiki=pd.DataFrame.from_dict(english_dict,orient='index')
+english_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_wiki.csv')
+english_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 english_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_summary.csv')
 
