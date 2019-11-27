@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import pandas as pd
 from data_source import DataSource 
 from whoosh.index import create_in
@@ -8,6 +9,8 @@ from whoosh.index import open_dir  # for opening index directory
 from whoosh import scoring  # used in Search section
 from whoosh.query import *  # used in Search section
 from whoosh.qparser import *
+from whoosh.spelling import *
+from spellchecker import SpellChecker
 
 class SearchEngine:
 
@@ -15,8 +18,20 @@ class SearchEngine:
     ix = None
     ds = None
     schema = None
-    
+    spell = None
+    spell_list = []
+
     def __init__(self, ds):
+
+        #Build Spelling Dictionary
+        ##Build Spell list off Herbs and Conditions
+        for key, value in ds.herb_dict.items():
+            self.spell_list.extend([i for word in value['english_name'] for i in word.split(' ')])
+            self.spell_list.extend([i for word in value['new_conditions'] for i in re.split(' |\\|',word)])
+        
+        self.spell = SpellChecker()   #add parameter languages = None to not pre-load a default dictionary
+        self.spell.word_frequency.load_words(self.spell_list*100)
+
         
         self.ds = ds
 
@@ -48,8 +63,6 @@ class SearchEngine:
         writer = self.ix.writer()
 
         for key, value in ds.herb_dict.items():
-           
-          
             writer.add_document(herb_id=value['herb_id'], 
                                 name=','.join(value['english_name']),
                                 pinyin=value['pinyin_name'],
@@ -62,8 +75,9 @@ class SearchEngine:
                                 possibly_unsafe=','.join(value['possibly_unsafe'] if value['possibly_unsafe'] is not None else ''), 
                                 safe=','.join(value['safe'] if value['safe'] is not None else '')
                                )
+
+
             '''
-            
             writer.add_document(herb_id=value['herb_id'], 
                                 name=','.join(value['english_name']),
                                 pinyin=value['pinyin_name'],
@@ -78,32 +92,51 @@ class SearchEngine:
                 
            '''
         writer.commit()
-        
-    
+
     
     def search(self, query):
-        
+
+        #find words in query that may be misspelled
+        split_query = query.split(' ')
+        correct_query = []
+
+        for word in split_query:
+            # Get the one `most likely` answer
+            correct = self.spell.correction(word)
+            if correct != word:
+                correct_query.append(correct)
+            else:
+                correct_query.append(word)
+
+            newq=" ".join(correct_query)
+            print("NEW QUERY", newq)
+
+        # Whoosh code to run search off corrected query
         parser = QueryParser(None, self.schema,termclass=terms.Variations,group=OrGroup)  #Ian Added Variations for searching on variations of the word, adeed OR group so it's either
         parser.add_plugin(MultifieldPlugin(["name", "other_name", "conditions"]))
-
-        
-        #parser = MultifieldParser(["name", "other_name", "conditions"], self.schema)
-            
         search_result = []
-        query = parser.parse(query)
+        qp = parser.parse(newq)
+        
+
         with self.ix.searcher() as s:
-            results = s.search(query, limit=100)
+            results = s.search(qp, limit=100, terms=True)
             print(len(results))
 
             for r in results:
                 #print(r, r.score)
                 search_result.append(self.ds.get_herb(int(r.get('herb_id'))))
 
+              
+##ATTEMPT for Highlighting Conditions in Query
+                #cond = (self.ds.herb_dict[int(r.get('herb_id'))].get('conditions'))
+                #print(cond)
+                #print("RESULT TERMS:",r.matched_terms())
+                #print("RESULT CONDITIONS",r.matched_terms()[0])
+                #print("QUERY:",query)
+                #print("QP",qp)
+                #if str(query) in cond:
+                #    print ("YEP COND in QUERY",query)
+
             
         return search_result
-
-
-
-
-
 
