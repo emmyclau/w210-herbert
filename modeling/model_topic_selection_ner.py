@@ -63,7 +63,7 @@ for row in medline.itertuples(index=True, name='Pandas'):
             accepted_harms.append(triple[0]+'*'+triple[3])
     medline.set_value(row.Index,'harm','|'.join(accepted_harms))
 
-medline['CommonNames']=medline['common_names'].apply(lambda x: ascii_only(str(x).split(':')[-1]))
+medline['CommonNames']=medline['common_names'].apply(lambda x: str(x).split(':')[-1])
 
 medline['CommonNames']=medline['CommonNames'].apply(lambda s: '|'.join(s.split(',')) ) 
 
@@ -194,6 +194,17 @@ ff_symp['IsHarm']= ff_symp['HerbTopicPair'].apply(lambda toc_list:(match_subset(
 ff_symp['Herb']=ff_symp['HerbTopicPair'].apply(lambda pair: ast.literal_eval(pair)[0]) 
 ff_symp.to_csv('FiftySymptoms.csv')
 
+ff_symp=pd.read_csv('FiftySymptoms.csv')
+fifty_fundamental['Chinese_Name']=fifty_fundamental['Chinese_Name'].apply(lambda x: x.strip('()'))
+fifty_dict=dict(fifty_fundamental[['Scientific_Name','Chinese_Name']].values.tolist())
+ff_symp['ChineseName']=ff_symp['Herb'].apply(lambda h: fifty_dict[h])
+ff_symp['Url']='No Url'
+for row in ff_symp.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'Herb')
+    wikipage=wikipediamw.page(name)
+    ff_symp.set_value(row.Index,'Url',wikipage.url)
+
+
 mq=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/meAndQi.csv')
 
 summary_dict=defaultdict(lambda:'')
@@ -250,7 +261,7 @@ mn_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 
 mn_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_natmedicines_summary.csv')
 
-medline_nih=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_attribs.csv')
+medline_nih=pd.read_excel('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/medline_nih_attribs.xlsx')
 summary_dict=defaultdict(lambda:'')
 for row in medline_nih.itertuples(index=True, name='Pandas'):
     name=getattr(row,'herb')
@@ -299,9 +310,11 @@ english=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data
 summary_dict=defaultdict(lambda:'')
 english_dict=defaultdict(lambda:'')
 content_dict=defaultdict(lambda:'')
+url_dict=defaultdict(lambda:'')
 english['new_name']=english['new_name'].str.replace(r"\(.*\)","")
 for row in english.itertuples(index=True, name='Pandas'):
     name=getattr(row,'new_name')
+    herbId=getattr(row,'herb_id')
     wikipage,page_used=wiki_search(name,return_type='both')
     #print("Looked for "+name+" got "+page_used)
     try:
@@ -325,12 +338,14 @@ for row in english.itertuples(index=True, name='Pandas'):
                 if toc_list[0]=='NO_MATCH':
                     continue
                 print(name,section[0])
+                #e.g. https://en.wikipedia.org/wiki/Ginseng#Other_plants_sometimes_called_ginseng
+                url_dict[name,section[0]]+=wikipage.url+'#'+'_'.join(section[-1].split())+'|'
                 content_dict[name,section[0]]+=wiki_topic_text(wikipage,section)+' \n '
-        english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc}
+        english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc,'HerbId':herbId}
         print('attempted entry for '+wikipage.title+' alias for '+name )
-        summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+        summary_dict[name]={'HerbId':herbId,'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
     except requests.exceptions.ReadTimeout:
-        print('timout!')
+        print('timeout!')
         time.sleep(5)
         try:
             
@@ -353,9 +368,10 @@ for row in english.itertuples(index=True, name='Pandas'):
                 if toc_list[0]=='NO_MATCH':
                     continue
                 print(name,section[0])
+                url_dict[name,section[0]]+=wikipage.url+'#'+'_'.join(section[-1].split())+'|'
                 content_dict[name,section[0]]+=wiki_topic_text(wikipage,section)+' \n '
-            english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc}
-            summary_dict[name]={'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
+            english_dict[name]={'OriginalName':name,'NameUsed':wikipage.title,'Url':wikipage.url,'Toc':toc,'HerbId':herbId}
+            summary_dict[name]={'HerbId':herbId,'name_used':page_used,'summary':wiki_summary(wikipage,toc,[],mode='single')}
             print('attempted entry for '+wikipage.title+' alias for '+name )
         
         except:
@@ -377,14 +393,61 @@ for row in extracted_wiki.itertuples(index=True, name='Pandas'):
         for con in concepts:
             
                 #herb-->column-->concepts in column
-                # , sep tuple of concept attributes, | sep for concepts
-            joined+=','.join([con['preferred_name'],con['semtypes'],con['score'],con['cui']])+'|'
+                # * sep tuple of concept attributes, | sep for concepts
+                #,con['semtypes'],con['score'],
+            joined+='*'.join([con['preferred_name'],con['cui'],con['semtypes']])+'|'
             extracted_wiki.set_value(row.Index,'UMLS',joined)
         print(' concepts extracted for '+str(row.Index))  
-
+#add herbid
+extracted_wiki['Herb']=extracted_wiki.index
+extracted_wiki['Herb']=extracted_wiki['Herb'].apply(lambda tup: tup[0])
+extracted_wiki['HerbId']=extracted_wiki['Herb'].apply(lambda name:  english_dict[name]['HerbId'])
+extracted_wiki['Url']=extracted_wiki.index
+extracted_wiki['Url']=extracted_wiki['Url'].apply(lambda index: url_dict[index])
+extracted_wiki['HarmFlag']=extracted_wiki.index
+extracted_wiki['HarmFlag']=extracted_wiki['HarmFlag'].apply(lambda tup: tup[1])
+extracted_wiki['HarmFlag']=extracted_wiki['HarmFlag'].apply(lambda topic: match_subset(lower_all([topic]),danger_words)) 
 extracted_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/extracted_wiki.csv')
 english_wiki=pd.DataFrame.from_dict(english_dict,orient='index')
 english_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_wiki.csv')
 english_sum=pd.DataFrame.from_dict(summary_dict,orient='index')
 english_sum.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/english_summary.csv')
 
+symmap=pd.read_csv('symmap_herbs.csv',encoding='utf8')
+sym=symmap[['Herb_ID','Pinyin_Name','English_Name']]
+sym=symmap[['Herb_Id','Pinyin_Name','English_Name']]
+sym['Url']='No info'
+sym_prefix='SMHB'
+url_base='https://www.symmap.org/detail/'
+sym['Url']=sym['Herb_Id'].apply(lambda h: url_base+sym_prefix+('0'*(5-len(str(h))))+str(h))
+
+condition_dict=defaultdict(lambda:'')
+conditions=pd.read_csv('condition.csv',encoding='utf8')
+for row in conditions.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'condition')
+    conditionId=getattr(row,'condition_id')
+    try:
+            
+        wikipage,page_used=wiki_search(name,return_type='both')
+        wikipage=wikipediamw.page(page_used)
+        toc=get_toc_mw(wikipage)
+        condition_dict[name]={'ConditionId':conditionId,'name_used':wikipage.title,'summary':wiki_summary(wikipage,toc,[],mode='single'),'url':wikipage.url,'toc':toc}
+        print('attempted entry for '+wikipage.title+' alias for '+name )
+    except:
+        pass
+condition_wiki=pd.DataFrame.from_dict(condition_dict,orient='index')    
+condition_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/condition_wiki.csv')   
+
+interaction_dict=defaultdict(lambda:'')        
+interactions=pd.read_csv('interaction.csv',encoding='utf8')
+for row in interactions.itertuples(index=True, name='Pandas'):
+    name=getattr(row,'interaction')
+    interactionId=getattr(row,'interaction_id')
+    try:
+        wikipage,page_used=wiki_search(name,return_type='both')
+        wikipage=wikipediamw.page(page_used)
+        toc=get_toc_mw(wikipage)
+        interaction_dict[name]={'InteractionIdId':interactionId,'name_used':wikipage.title,'summary':wiki_summary(wikipage,toc,[],mode='single'),'url':wikipage.url,'toc':toc}
+        print('attempted entry for '+wikipage.title+' alias for '+name )
+    except:
+         pass
