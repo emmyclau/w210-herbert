@@ -65,3 +65,8 @@ for row in master_list.itertuples(index=True, name='Pandas'):
                     except TypeError:
                         pass
     print(herb)
+    
+pubmed_wiki=pd.DataFrame.from_dict(pubmed_dict,orient='index')  
+pubmed_wiki.columns=["Info_String"]  
+pubmed_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/pubmed_conditions.csv')
+
