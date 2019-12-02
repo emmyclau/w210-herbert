@@ -1,0 +1,36 @@
+{% macro display_interaction(interaction_id, interaction, intro, intro_url, herbs) -%}   
+
+
+    <!-- English Name -->
+    <div class="d-flex w-100 justify-content-between">
+        <div class="h2 text-capitalize mb-1">{{interaction}}</div>
+        {% if intro|length > 1 %}
+        <p class="text-right font-weight-light small">data source: <a class="text-dark" href='{{intro_url}}' target="_blank">Wikipedia</a></p>
+        {% endif %}
+    </div>    
+
+    <!-- Introduction -->
+    <div class="medium mb-3 mt-3" style="white-space: pre-line;">{{intro}}</div>
+
+    
+
+    <!-- Herbs -->
+    <div class="h4 mt-4 mb-2 text-capitalize">Herbs have interaction with {{interaction}} <small>({{herbs|length}})</small></div>
+
+    {% for herb in herbs %}
+    <div class="d-flex w-100 justify-content-between">   
+        {% set items = herb.split('|') %}
+        <a class="mt-1 mb-1 text-dark text-capitalize" href="javascript:void(0);" onclick="display_herb({{items[1].split('*')[1]}});">{{items[1].split('*')[0]}}</a>
+        <p class="mt-1 mb-1 text-right font-weight-light small">data source: 
+            {% for item in items[2:-1] %}
+            <a class="text-dark"  href="{{item.split('*')[1]}}" target="_blank">{{item.split('*')[0]}},</a>
+            {% endfor %}
+            <a class="text-dark"  href="{{items[-1].split('*')[1]}}" target="_blank">{{items[-1].split('*')[0]}}</a>
+        </p>
+    </div>  
+    {% endfor %}
+
+    
+    <div class="mb-5"></div>
+
+{%- endmacro %}
