@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+	<style>
+        body,html {
+            height:100%;
+        }
+        
+        #top-container {
+            height: 210px;
+            padding-top:calc(5%);            
+            background-image: url({{ url_for('static', filename='img/banner.png') }});
+            background-size:     cover;                      
+            background-repeat:   no-repeat;
+            background-position: center center; 
+        }
+        
+        .mr-6,
+        .mx-6 {
+          margin-right: 5rem !important;
+        }
+        
+        
+        .btn-outline-tertiary {
+          color: #6c757d;
+          background-color: #fff;
+          border-color: #6c757d;
+        }
+
+        .btn-outline-tertiary:hover {
+          color: #fff;
+          background-color: #6c757d;
+          border-color: #6c757d;
+        }
+
+        .btn-outline-tertiary:focus, .btn-outline-tertiary.focus {
+          box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+        }
+
+        .btn-outline-tertiary.disabled, .btn-outline-tertiary:disabled {
+          color: #6c757d;
+        }
+
+        .btn-outline-tertiary:not(:disabled):not(.disabled):active, .btn-outline-tertiary:not(:disabled):not(.disabled).active,
+        .show > .btn-outline-tertiary.dropdown-toggle {
+          color: #fff;
+          background-color: #6c757d;
+          border-color: #6c757d;
+        }
+
+        .btn-outline-tertiary:not(:disabled):not(.disabled):active:focus, .btn-outline-tertiary:not(:disabled):not(.disabled).active:focus,
+        .show > .btn-outline-tertiary.dropdown-toggle:focus {
+          box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+        }
+        
+        .div-centered {
+          text-align: left; 
+          margin: auto; 
+          width: 200px;
+        }
+        
+    </style>
+      
+
+    <script>
+        function search_all() {   
+            location.href = encodeURI('/search?query=' + document.getElementById("search_input").value)
+        } 
+        
+        function search_new(q) {   
+            location.href = encodeURI('/search?query=' + q)
+        } 
+        
+        
+        
+    </script>
+      
+    <title>Herbert - Semantic Search Engine for Herbal Medicines</title>
+      
+  </head>
+    
+  <body>
+      
+    <!-- nav bar -->
+    <nav id="myNav" class="navbar navbar-dark bg-dark fixed-top navbar-expand-sm">
+        <a class="navbar-brand" href="/">Herbert</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBarMain"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navBarMain">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a href="/#team" class="nav-link">Team</a></li>
+                <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+      
+      
+    <!-- Display search box -->
+    <section id="top-container" class="container-fluid">
+        <div class="row d-flex align-items-center">
+            <div class="col-md-4 mt-4 mb-3">
+                <div class="h4 mb-2 text-secondary text-bottom text-right text-light">Herbal Medicine Search</div>
+            </div>
+            <div class="col-md-5 mt-4 mb-3">
+              <div class="input-group">
+                <input type="text" id="search_input" class="form-control" value="{{query}}"/>
+                <div class="input-group-append">
+                    <button type="button" id="search_button" class="btn btn-outline-tertiary" onclick="search_all()" >Search</button>
+                </div>
+              </div>
+            </div>
+        </div>  
+    </section>
+    
+      
+    <!-- display error message  -->
+    <section id="main-container">
+                
+        <div class="container-fluid">
+            
+            <div class="row d-flex align-items-center">
+                <div class="col-md-4 mt-5 mb-3"></div>
+                <div class="col-md-4 mt-5 mb-3">
+                    <div class="mb-2 text-secondary text-bottom text-left">Your search - <b > {{query if query}} </b> - did not match any result.</div>
+                    
+                    {% if (query != new_query) and (new_query != 'a') %}
+                    <div class="mb-2 text-secondary text-bottom text-left mb-5">Did you mean: <a class='text-capitalize text-primary' href="javascript:void(0);" onclick="search_new('{{new_query}}');"> <b><i>{{new_query}} </i></b></a></div>
+                    {% endif %}
+                    <div class="mb-2 text-secondary text-bottom text-left">Suggestions:</div>
+                    <ul>
+                        <li class="text-secondary">Try different keywords.</li>
+                        <li class="text-secondary">Try more general keywords.</li>
+                        <li class="text-secondary">Try fewer keywords.</li>
+                        <li class="text-secondary">Make sure all words are spelled correctly.</li>
+                    </ul>
+                    
+                </div>
+            
+            </div>
+        </div>
+        
+        
+    </section>
+
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script>
+    var input = document.getElementById("search_input");
+    input.addEventListener("keyup", function(event) {
+      if (event.keyCode === 13) {
+       event.preventDefault();
+       document.getElementById("search_button").click();
+      }
+    });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
