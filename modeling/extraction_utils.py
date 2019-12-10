@@ -5,7 +5,7 @@ Created on Tue Oct 29 07:16:41 2019
 
 @author: gurdit.chahal
 """
-exec(open('wiki_scrape.py').read())
+exec(open('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/wiki_scrape.py').read())
 import ast 
 from spacy.matcher import Matcher 
 from spacy.tokens import Span 
@@ -32,13 +32,30 @@ import phrasemachine
 import time
 
 print("loading word vecs...")
-wv_from_bin = KeyedVectors.load_word2vec_format("wikipedia-pubmed-and-PMC-w2v.bin", binary=True)
+wv_from_bin = KeyedVectors.load_word2vec_format("/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/modeling/wikipedia-pubmed-and-PMC-w2v.bin", binary=True)
 print('loading spacy')
 nlp = spacy.load("scilg")
 merge_nps = nlp.create_pipe("merge_noun_chunks")
 nlp.add_pipe(merge_nps)
 
 verb_clause_pattern = r'<VERB>*<ADV>*<PART>*<VERB>+<PART>*'
+
+def clean_summary(summary):
+    # Remove new lines
+    cleaned_summary = re.sub('\n', ' ', summary)
+    # Fix parentheses from pronounciation
+    cleaned_summary = re.sub(r'\(; ', '(', cleaned_summary)
+    # Fix spaces inside parentheses from pronounciation
+    cleaned_summary = re.sub(r'\(\s+', '(', cleaned_summary)
+    # Fix spaces inside parentheses from pronounciation
+    cleaned_summary = re.sub(r'\s+\)', ')', cleaned_summary)
+    # Fix parentheses from pronounciation
+    cleaned_summary = re.sub(r'\(\) ', '', cleaned_summary)
+    # Fix any periods without spaces (e.g. Maritime.The)
+    cleaned_summary = re.sub(r'(?<=[a-zA-Z])\.(?=[a-zA-Z]{2,})', '. ', cleaned_summary)
+    # Fix any double periods (e.g.  ..)
+    cleaned_summary = re.sub(r'(?<=[^\.])\.{2}(?=[^\.])', '.', cleaned_summary)
+    return cleaned_summary
 
 def ascii_only(string):
     return re.sub(r'[^\x00-\x7f]',r' ', string).strip()
@@ -502,9 +519,13 @@ def extract_clausieProp(text,clause_type=None):
         propositions=[]
     return propositions
 
-def keep_relevant_verbs(entity_triple,verb_keywords):
-    #todo only keep triples that are relevant
-    pass
+def keep_relevant_verbs(entity_triple,verb_keywords,word2vec_model):
+    rel_verb= relavent_contents(entity_triple[1],verb_keywords,word2vec_model)
+    #only keep triples that are relevant
+    if rel_verb in entity_triple:
+        return entity_triple
+    else:
+        return "NO_RELEVANT_VERB"
 
 def flatten_list(l):
     return list(chain.from_iterable(l))

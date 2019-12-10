@@ -425,7 +425,7 @@ url_base='https://www.symmap.org/detail/'
 sym['Url']=sym['Herb_Id'].apply(lambda h: url_base+sym_prefix+('0'*(5-len(str(h))))+str(h))
 
 condition_dict=defaultdict(lambda:'')
-conditions=pd.read_csv('condition.csv',encoding='utf8')
+conditions=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/condition_v8.csv',encoding='utf8')
 for row in conditions.itertuples(index=True, name='Pandas'):
     name=getattr(row,'condition')
     conditionId=getattr(row,'condition_id')
@@ -434,15 +434,15 @@ for row in conditions.itertuples(index=True, name='Pandas'):
         wikipage,page_used=wiki_search(name,return_type='both')
         wikipage=wikipediamw.page(page_used)
         toc=get_toc_mw(wikipage)
-        condition_dict[name]={'ConditionId':conditionId,'name_used':wikipage.title,'summary':wiki_summary(wikipage,toc,[],mode='single'),'url':wikipage.url,'toc':toc}
+        condition_dict[name]={'ConditionId':conditionId,'name_used':wikipage.title,'summary':clean_summary(wiki_summary(wikipage,toc,[],mode='single')),'url':wikipage.url,'toc':toc}
         print('attempted entry for '+wikipage.title+' alias for '+name )
     except:
         pass
 condition_wiki=pd.DataFrame.from_dict(condition_dict,orient='index')    
-condition_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/condition_wiki.csv')   
+condition_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/conditionv8_wiki.csv')   
 
 interaction_dict=defaultdict(lambda:'')        
-interactions=pd.read_csv('interaction.csv',encoding='utf8')
+interactions=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/interaction_v5.csv',encoding='utf8')
 for row in interactions.itertuples(index=True, name='Pandas'):
     name=getattr(row,'interaction')
     interactionId=getattr(row,'interaction_id')
@@ -450,9 +450,9 @@ for row in interactions.itertuples(index=True, name='Pandas'):
         wikipage,page_used=wiki_search(name,return_type='both')
         wikipage=wikipediamw.page(page_used)
         toc=get_toc_mw(wikipage)
-        interaction_dict[name]={'InteractionIdId':interactionId,'name_used':wikipage.title,'summary':wiki_summary(wikipage,toc,[],mode='single'),'url':wikipage.url,'toc':toc}
+        interaction_dict[name]={'InteractionIdId':interactionId,'name_used':wikipage.title,'summary':clean_summary(wiki_summary(wikipage,toc,[],mode='single')),'url':wikipage.url,'toc':toc}
         print('attempted entry for '+wikipage.title+' alias for '+name )
     except:
          pass
 interaction_wiki=pd.DataFrame.from_dict(interaction_dict,orient='index')    
-interaction_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/interaction_wiki.csv')   
+interaction_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/interactionv5_wiki.csv')   

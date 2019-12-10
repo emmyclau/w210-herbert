@@ -38,7 +38,7 @@ for page in pdf:
     print(ingredient_pos)
     if ingredient_pos and directions_pos:
         direction=''
-        recipe_book[components[0]]={'Ingredients':'|'.join(components[ingredient_pos:directions_pos])}
+        recipe_book[components[0]]={'Ingredients':'|'.join(components[ingredient_pos+1:directions_pos])}
         for component in components[directions_pos+1:]:
             direction_flag=component.strip()[0].isdigit()
             if direction_flag:
@@ -52,7 +52,7 @@ for page in pdf:
     
 recipes=pd.DataFrame.from_dict(recipe_book,orient='index')
     
-recipes.to_excel('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/tcmdietgroup.xlsx')   
+recipes.to_excel('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/cooking/tcmdietgroup.xlsx')   
 
 
     
