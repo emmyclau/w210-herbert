@@ -456,3 +456,35 @@ for row in interactions.itertuples(index=True, name='Pandas'):
          pass
 interaction_wiki=pd.DataFrame.from_dict(interaction_dict,orient='index')    
 interaction_wiki.to_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/interactionv5_wiki.csv')   
+
+
+topic_select=pd.read_csv('/Users/gurdit.chahal/Capstone_Data_Mining/w210-herbert/data_sources/fifty_fundamental_herbs_g.csv')
+master_contents=list(np.unique(topic_select.Table_Contents.apply(ast.literal_eval).sum())) #132 unique headings
+m_contents=list(topic_select.Table_Contents.apply(ast.literal_eval).sum())
+topic_select.Table_Contents.apply(ast.literal_eval).apply(len).describe()
+topic_select.Relavent_A.apply(ast.literal_eval).apply(len).describe()
+
+tally=[]
+for row in topic_select.itertuples(index=True,name='Pandas'):
+    master=len(ast.literal_eval(getattr(row,'Table_Contents')))
+    sub=len(ast.literal_eval(getattr(row,'Relavent_Model')))
+    if master >0:
+        tally.append(sub/master)
+np.mean(tally)
+
+tally_dict={}
+for row in topic_select.itertuples(index=True,name='Pandas'):
+    master=ast.literal_eval(getattr(row,'Table_Contents'))
+    sub_A=ast.literal_eval(getattr(row,'Relavent_A'))
+    sub_M=ast.literal_eval(getattr(row,'Relavent_Model'))
+    herb=getattr(row,'Scientific Name')
+    
+    
+indiv_contentsa=list(topic_select.Relavent_A.apply(stringify_eval).sum())
+indiv_contentsml=list(topic_select.Relavent_Model.apply(stringify_eval).sum())
+        
+indiv_contentsa=list(np.unique(topic_select.Relavent_A.apply(stringify_eval).sum()))
+indiv_contentsb=list(np.unique(topic_select.Relavent_B.apply(stringify_eval).sum()))
+indiv_contentsc=list(np.unique(topic_select.Relavent_C.apply(stringify_eval).sum()))
+indiv_contentsd=list(np.unique(topic_select.Relavent_D.apply(stringify_eval).sum()))
+indiv_contentsml=list(np.unique(topic_select.Relavent_Model.apply(stringify_eval).sum()))
