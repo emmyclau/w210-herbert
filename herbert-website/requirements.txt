@@ -3,7 +3,7 @@ dominate==2.4.0
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1
 itsdangerous==1.1.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 numpy==1.17.3
 pandas==0.25.3
